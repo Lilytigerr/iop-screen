@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0E4C55">
+<title>眼壓初篩速記</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#EFF3F4; --surface:#FFFFFF; --surface-2:#F6F9F9;
+  --ink:#132227; --ink-soft:#54686F; --line:#D5E0E3;
+  --teal:#0E4C55; --teal-soft:#D9E6E8;
+  --go-bg:#DDEFE3; --go-ink:#15613A; --go-line:#9BCBAF;
+  --stop-bg:#F9DBD7; --stop-ink:#8E2A22; --stop-line:#E2A9A2;
+  --wait-bg:#FCEFD6; --wait-ink:#84560A; --wait-line:#DEC08A;
+  --shadow:0 1px 2px rgba(19,34,39,.06),0 8px 24px rgba(19,34,39,.07);
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E171A; --surface:#16242A; --surface-2:#1C2E35;
+    --ink:#E7EEF0; --ink-soft:#9BB0B7; --line:#283A41;
+    --teal:#7FC3CE; --teal-soft:#1E3A41;
+    --go-bg:#16321F; --go-ink:#8FD8AC; --go-line:#2C5C3D;
+    --stop-bg:#3A1C19; --stop-ink:#F0A79E; --stop-line:#6B342D;
+    --wait-bg:#33280F; --wait-ink:#EBC680; --wait-line:#5C4A1F;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E171A; --surface:#16242A; --surface-2:#1C2E35;
+  --ink:#E7EEF0; --ink-soft:#9BB0B7; --line:#283A41;
+  --teal:#7FC3CE; --teal-soft:#1E3A41;
+  --go-bg:#16321F; --go-ink:#8FD8AC; --go-line:#2C5C3D;
+  --stop-bg:#3A1C19; --stop-ink:#F0A79E; --stop-line:#6B342D;
+  --wait-bg:#33280F; --wait-ink:#EBC680; --wait-line:#5C4A1F;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+     -webkit-text-size-adjust:100%}
+.wrap{max-width:620px;margin:0 auto;padding-inline:16px;padding-block:0 96px}
+
+header{padding-block:18px 10px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h1{font-size:19px;font-weight:700;margin:0;letter-spacing:.01em}
+header .sub{font-size:12px;color:var(--ink-soft)}
+
+.tabs{display:flex;gap:6px;background:var(--surface-2);border:1px solid var(--line);
+      border-radius:11px;padding:4px;margin-bottom:14px}
+.tabs button{flex:1;appearance:none;border:0;background:transparent;color:var(--ink-soft);
+      font-family:var(--sans);font-size:14px;font-weight:500;padding:9px 4px;border-radius:8px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+
+.verdict{position:sticky;top:0;z-index:5;margin:0 -16px 14px;padding:13px 16px;
+  border-block:1px solid var(--wait-line);background:var(--wait-bg);color:var(--wait-ink);
+  display:flex;align-items:center;gap:12px}
+.verdict.go{background:var(--go-bg);color:var(--go-ink);border-color:var(--go-line)}
+.verdict.stop{background:var(--stop-bg);color:var(--stop-ink);border-color:var(--stop-line)}
+.verdict .big{font-size:18px;font-weight:700;white-space:nowrap}
+.verdict .why{font-size:12.5px;opacity:.85;line-height:1.35}
+.verdict .why b{font-family:var(--mono);font-weight:600}
+
+section.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.step{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.step .n{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--teal);
+  border:1px solid var(--teal);border-radius:4px;padding:1px 5px}
+.step h2{font-size:15px;font-weight:700;margin:0}
+.step .hint{font-size:12px;color:var(--ink-soft);margin-left:auto}
+
+.eyes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.eye label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:5px;letter-spacing:.04em}
+.eye input{width:100%;font-family:var(--mono);font-size:30px;font-weight:600;text-align:center;
+  padding:12px 6px;border:1.5px solid var(--line);border-radius:11px;background:var(--surface-2);
+  color:var(--ink)}
+.eye input:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal)}
+.eye .unit{font-size:11px;color:var(--ink-soft);text-align:center;margin-top:4px;font-family:var(--mono)}
+
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.seg .lbl{grid-column:1/-1;font-size:12px;color:var(--ink-soft)}
+.seg button{appearance:none;font-family:var(--sans);font-size:15px;padding:12px;border:1.5px solid var(--line);
+  border-radius:11px;background:var(--surface-2);color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);font-weight:700}
+.seg button small{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:2px}
+.drugs{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px}
+.drugs .lbl{font-size:12px;color:var(--ink-soft);margin-bottom:8px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips button{appearance:none;font-family:var(--sans);font-size:14px;padding:10px 12px;text-align:left;
+  border:1.5px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink);cursor:pointer}
+.chips button[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);font-weight:700}
+.drugs input{width:100%;margin-top:8px;font-family:var(--sans);font-size:15px;padding:10px 12px;
+  border:1.5px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink)}
+.dx{display:grid;gap:8px}
+.dx button{appearance:none;text-align:left;font-family:var(--sans);font-size:15px;
+  padding:13px 14px;border:1.5px solid var(--line);border-radius:11px;background:var(--surface-2);
+  color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:10px}
+.dx button .tag{font-family:var(--mono);font-size:11px;color:var(--ink-soft);
+  border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+.dx button[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);font-weight:700}
+.dx button[aria-pressed="true"] .tag{color:var(--teal);border-color:var(--teal)}
+
+.fields{display:grid;gap:11px}
+.field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:5px}
+.field input,.field textarea{width:100%;font-family:var(--sans);font-size:16px;padding:11px 12px;
+  border:1.5px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink)}
+.field textarea{min-height:64px;resize:vertical}
+.field input:focus,.field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media (max-width:420px){.two{grid-template-columns:1fr}}
+
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);
+  border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));z-index:10}
+.bar .inner{max-width:620px;margin:0 auto;display:flex;gap:10px;align-items:center}
+button.primary{flex:1;appearance:none;border:0;border-radius:11px;background:var(--teal);
+  color:var(--surface);font-family:var(--sans);font-size:16px;font-weight:700;padding:14px;cursor:pointer}
+button.primary:disabled{opacity:.45;cursor:not-allowed}
+button.ghost{appearance:none;background:transparent;border:1.5px solid var(--line);color:var(--ink-soft);
+  border-radius:11px;font-family:var(--sans);font-size:14px;padding:13px 14px;cursor:pointer}
+
+.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.count{border:1px solid var(--line);border-radius:11px;padding:10px 8px;text-align:center;background:var(--surface)}
+.count b{display:block;font-family:var(--mono);font-size:22px;font-weight:600}
+.count span{font-size:11.5px;color:var(--ink-soft)}
+.count.go{background:var(--go-bg);border-color:var(--go-line);color:var(--go-ink)}
+.count.stop{background:var(--stop-bg);border-color:var(--stop-line);color:var(--stop-ink)}
+.count.wait{background:var(--wait-bg);border-color:var(--wait-line);color:var(--wait-ink)}
+.count.go span,.count.stop span,.count.wait span{color:inherit;opacity:.8}
+
+ul.list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+ul.list li{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;
+  display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center}
+.who{font-weight:500;font-size:15px}
+.meta{font-size:12px;color:var(--ink-soft);grid-column:1/2}
+.meta .mono{font-family:var(--mono)}
+.pill{font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap;
+  border:1px solid var(--wait-line);background:var(--wait-bg);color:var(--wait-ink)}
+.pill.go{border-color:var(--go-line);background:var(--go-bg);color:var(--go-ink)}
+.pill.stop{border-color:var(--stop-line);background:var(--stop-bg);color:var(--stop-ink)}
+li .del{grid-column:2/3;justify-self:end;appearance:none;background:transparent;border:0;
+  color:var(--ink-soft);font-size:12px;cursor:pointer;padding:2px 0;text-decoration:underline}
+
+.note{font-size:12.5px;color:var(--ink-soft);line-height:1.6}
+.thr{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.thr input{width:92px;font-family:var(--mono);font-size:18px;font-weight:600;text-align:center;
+  padding:8px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--ink)}
+.banner{border:1px solid var(--wait-line);background:var(--wait-bg);color:var(--wait-ink);
+  border-radius:11px;padding:11px 13px;font-size:13px;margin-bottom:12px;line-height:1.5}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;background:var(--ink);
+  color:var(--ground);padding:10px 16px;border-radius:999px;font-size:14px;z-index:20;
+  opacity:0;pointer-events:none;transition:opacity .18s}
+.toast.on{opacity:1}
+.empty{text-align:center;color:var(--ink-soft);font-size:13.5px;padding:26px 10px;
+  border:1px dashed var(--line);border-radius:12px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>眼壓初篩速記</h1>
+    <span class="sub">BRM411 · POAG / OHT</span>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button id="tab-new" role="tab" aria-selected="true" aria-controls="panel-new">新增一筆</button>
+    <button id="tab-list" role="tab" aria-selected="false" aria-controls="panel-list">名單 <span id="tabcount"></span></button>
+  </div>
+
+  <div id="panel-new" role="tabpanel" aria-labelledby="tab-new">
+    <div class="verdict" id="verdict">
+      <span class="big" id="vbig">先量眼壓</span>
+      <span class="why" id="vwhy">眼壓是第一關；沒有數值就先不用往下問。</span>
+    </div>
+
+    <section class="card">
+      <div class="step"><span class="n">1</span><h2>眼壓</h2><span class="hint">mmHg</span></div>
+      <div class="eyes">
+        <div class="eye">
+          <label for="iopL">左眼 OS</label>
+          <input id="iopL" inputmode="decimal" autocomplete="off" placeholder="--">
+          <div class="unit">mmHg</div>
+        </div>
+        <div class="eye">
+          <label for="iopR">右眼 OD</label>
+          <input id="iopR" inputmode="decimal" autocomplete="off" placeholder="--">
+          <div class="unit">mmHg</div>
+        </div>
+      </div>
+      <div class="seg" id="meds">
+        <span class="lbl">目前有用降眼壓藥？</span>
+        <button type="button" data-meds="no" aria-pressed="true">沒有／已停藥<small><span class="thrN">20</span>–<span class="thrH">33</span> mmHg</small></button>
+        <button type="button" data-meds="yes" aria-pressed="false">有在用<small>&gt; <span class="thrT">14</span> mmHg</small></button>
+      </div>
+      <div class="drugs" id="drugs" hidden>
+        <div class="lbl">用什麼藥？（可複選；符合 &gt; 14 mmHg 者仍可進入，之後停藥再量）</div>
+        <div class="chips" id="chips">
+          <button type="button" data-drug="Latanoprost" aria-pressed="false">Latanoprost</button>
+          <button type="button" data-drug="Timolol" aria-pressed="false">Timolol</button>
+          <button type="button" data-drug="Cosopt" aria-pressed="false">Cosopt</button>
+          <button type="button" data-drug="Azarga" aria-pressed="false">Azarga</button>
+          <button type="button" data-drug="Simbrinza" aria-pressed="false">Simbrinza</button>
+          <button type="button" data-drug="Lumigan" aria-pressed="false">Lumigan</button>
+          <button type="button" data-drug="Travatan" aria-pressed="false">Travatan</button>
+          <button type="button" data-drug="不知道藥名" aria-pressed="false">不知道藥名</button>
+        </div>
+        <input id="drugOther" autocomplete="off" placeholder="其他藥名（看藥盒或瓶身）">
+      </div>
+      <div class="fields" style="margin-top:11px">
+        <div class="field">
+          <label for="measured">量測日期（選填）</label>
+          <input id="measured" type="date">
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="step"><span class="n">2</span><h2>疾病別</h2><span class="hint">單選</span></div>
+      <div class="dx" id="dx">
+        <button type="button" data-dx="高眼壓症" aria-pressed="false"><span class="tag">OHT</span>高眼壓症</button>
+        <button type="button" data-dx="原發性隅角開放性青光眼" aria-pressed="false"><span class="tag">POAG</span>原發性隅角開放性青光眼</button>
+        <button type="button" data-dx="其他青光眼" aria-pressed="false"><span class="tag">OTH</span>其他青光眼</button>
+        <button type="button" data-dx="皆無或不確定" aria-pressed="false"><span class="tag">NA</span>皆無／不確定</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="step"><span class="n">3</span><h2>基本資料</h2><span class="hint">姓名可用稱呼</span></div>
+      <div class="fields">
+        <div class="two">
+          <div class="field">
+            <label for="name">姓名或稱呼</label>
+            <input id="name" autocomplete="off" placeholder="王先生">
+          </div>
+          <div class="field">
+            <label for="contact">電話或 Email</label>
+            <input id="contact" autocomplete="off" inputmode="tel" placeholder="0912-345-678">
+          </div>
+        </div>
+        <div class="field">
+          <label for="note">備註（選填）</label>
+          <textarea id="note" placeholder="例：下午才方便回電；用藥兩種"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="step"><span class="n">·</span><h2>判定門檻</h2></div>
+      <div class="thr">
+        <input id="thrN" inputmode="decimal" value="20"><span class="note">未用藥／停藥後 下限（≥）</span>
+      </div>
+      <div class="thr" style="margin-top:8px">
+        <input id="thrH" inputmode="decimal" value="33"><span class="note">未用藥／停藥後 上限（≤）</span>
+      </div>
+      <div class="thr" style="margin-top:8px">
+        <input id="thrT" inputmode="decimal" value="14"><span class="note">用藥中（篩選訪視）下限（&gt;）</span>
+      </div>
+      <p class="note" style="margin:10px 0 0">Protocol V2.0：未曾用藥或停藥（washout）後 ≥ 20 且 ≤ 33 mmHg；用藥中 &gt; 14 mmHg。</p>
+    </section>
+
+    <section class="card">
+      <div class="step"><span class="n">·</span><h2>雲端試算表</h2><span class="hint" id="cloudState">未設定</span></div>
+      <div class="fields">
+        <div class="field">
+          <label for="cloudUrl">Apps Script 網頁應用程式網址</label>
+          <input id="cloudUrl" inputmode="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec">
+        </div>
+      </div>
+      <p class="note" style="margin:8px 0 0">填了之後每存一筆會同時寫進 Google 試算表；沒網路時先留在手機，下次開啟或儲存時自動補送。試算表可隨時「下載為 Excel」。</p>
+    </section>
+  </div>
+
+  <div id="panel-list" role="tabpanel" aria-labelledby="tab-list" hidden>
+    <div id="dbwarn" class="banner" hidden>這台裝置連不到資料庫，這一輪輸入只會留在畫面上，關掉就沒了。</div>
+    <div class="counts">
+      <div class="count go"><b id="cGo">0</b><span>續問</span></div>
+      <div class="count stop"><b id="cStop">0</b><span>不續問</span></div>
+      <div class="count wait"><b id="cWait">0</b><span>未取得眼壓</span></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:12px">
+      <button class="ghost" id="export" style="flex:1">匯出 CSV</button>
+      <button class="ghost" id="syncBtn" style="flex:1" hidden>補送雲端 <span id="pendingN"></span></button>
+    </div>
+    <ul class="list" id="list"></ul>
+    <div class="empty" id="empty">還沒有資料。到「新增一筆」開始收。</div>
+  </div>
+</div>
+
+<div class="bar" id="bar">
+  <div class="inner">
+    <button class="ghost" id="clear" type="button">清空</button>
+    <button class="primary" id="save" type="button">儲存這一筆</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var db=null, downloads=null, thrN=20, thrH=33, thrT=14, onMeds=false, drugPick=[], rows=[], localRows=[], dxPick="";
+
+  function num(v){ v=(v||"").toString().trim(); if(!v) return null;
+    var n=parseFloat(v); return isFinite(n)?n:null; }
+  function maxIop(){ var a=num($("iopL").value), b=num($("iopR").value);
+    if(a===null&&b===null) return null; return Math.max(a===null?-Infinity:a, b===null?-Infinity:b); }
+  function ruleText(){ return onMeds?("> "+thrT):(thrN+"–"+thrH); }
+  function pass(mx){ return onMeds?(mx>thrT):(mx>=thrN&&mx<=thrH); }
+  function verdictOf(mx){ if(mx===null) return "未取得眼壓"; return pass(mx)?"續問":"不續問"; }
+  function fmt(n){ return (Math.round(n*10)/10).toFixed(1); }
+
+  function paintVerdict(){
+    var mx=maxIop(), v=verdictOf(mx), el=$("verdict");
+    el.classList.remove("go","stop");
+    if(v==="續問"){ el.classList.add("go"); $("vbig").textContent="續問";
+      $("vwhy").innerHTML="較高眼 <b>"+fmt(mx)+"</b> mmHg，符合"+(onMeds?"用藥中":"未用藥")+"條件 <b>"+ruleText()+"</b>。"; }
+    else if(v==="不續問"){ el.classList.add("stop"); $("vbig").textContent="不續問";
+      $("vwhy").innerHTML="較高眼 <b>"+fmt(mx)+"</b> mmHg，不在"+(onMeds?"用藥中":"未用藥")+"條件 <b>"+ruleText()+"</b> 內。後面免問。"; }
+    else { $("vbig").textContent="先量眼壓";
+      $("vwhy").textContent="眼壓是第一關；沒有數值就先不用往下問。"; }
+  }
+
+  ["iopL","iopR"].forEach(function(id){ $(id).addEventListener("input",paintVerdict); });
+  var saveThr=function(){};
+  function paintThr(){ [["thrN",thrN],["thrH",thrH],["thrT",thrT]].forEach(function(pr){
+      Array.prototype.forEach.call(document.querySelectorAll("."+pr[0]),function(e){e.textContent=pr[1]}); }); }
+  $("thrN").addEventListener("input",function(){ var t=num($("thrN").value); if(t!==null){ thrN=t; paintThr(); paintVerdict(); saveThr(); } });
+  $("thrH").addEventListener("input",function(){ var t=num($("thrH").value); if(t!==null){ thrH=t; paintThr(); paintVerdict(); saveThr(); } });
+  $("thrT").addEventListener("input",function(){ var t=num($("thrT").value); if(t!==null){ thrT=t; paintThr(); paintVerdict(); saveThr(); } });
+  $("meds").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-meds]"); if(!b) return;
+    onMeds=b.dataset.meds==="yes";
+    Array.prototype.forEach.call($("meds").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});
+    $("drugs").hidden=!onMeds;
+    paintVerdict();
+  });
+  $("chips").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-drug]"); if(!b) return;
+    var on=b.getAttribute("aria-pressed")==="true"; b.setAttribute("aria-pressed",on?"false":"true");
+    drugPick=Array.prototype.filter.call($("chips").querySelectorAll("button"),function(x){return x.getAttribute("aria-pressed")==="true"})
+             .map(function(x){return x.dataset.drug});
+  });
+
+  $("dx").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-dx]"); if(!b) return;
+    var on=b.getAttribute("aria-pressed")==="true";
+    Array.prototype.forEach.call($("dx").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed","false")});
+    if(!on){ b.setAttribute("aria-pressed","true"); dxPick=b.dataset.dx; } else { dxPick=""; }
+  });
+
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("on");
+    setTimeout(function(){t.classList.remove("on")},1800); }
+
+  function clearForm(){
+    ["iopL","iopR","name","contact","note","measured"].forEach(function(id){$(id).value=""});
+    dxPick=""; Array.prototype.forEach.call($("dx").querySelectorAll("button"),
+      function(x){x.setAttribute("aria-pressed","false")});
+    onMeds=false; Array.prototype.forEach.call($("meds").querySelectorAll("button"),
+      function(x){x.setAttribute("aria-pressed",x.dataset.meds==="no"?"true":"false")});
+    drugPick=[]; Array.prototype.forEach.call($("chips").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed","false")});
+    $("drugOther").value=""; $("drugs").hidden=true;
+    paintVerdict(); $("iopL").focus();
+  }
+  $("clear").addEventListener("click",clearForm);
+
+  $("save").addEventListener("click",function(){
+    var name=$("name").value.trim(), mx=maxIop();
+    if(!name && mx===null){ toast("至少要有姓名或眼壓"); return; }
+    var rec={
+      name:name, contact:$("contact").value.trim(),
+      iopL:num($("iopL").value), iopR:num($("iopR").value), iopMax:mx,
+      dx:dxPick, onMeds:onMeds, drugs:onMeds?drugPick.slice():[], drugOther:onMeds?$("drugOther").value.trim():"",
+      verdict:verdictOf(mx), threshold:ruleText(),
+      measuredOn:$("measured").value||"", note:$("note").value.trim(),
+      createdAt:new Date().toISOString()
+    };
+    if(db){
+      db.collection("records").add(rec).then(function(){ toast("已存"); clearForm(); })
+        .catch(function(err){ toast(err&&err.code==="quota_exceeded"?"筆數已滿，請先匯出並刪除舊資料":"存不起來，請再試一次"); });
+    } else {
+      localRows.unshift(Object.assign({id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),synced:false},rec)); render(); toast("已存"); clearForm();
+    }
+  });
+
+  function tab(which){
+    var isNew=which==="new";
+    $("tab-new").setAttribute("aria-selected",isNew?"true":"false");
+    $("tab-list").setAttribute("aria-selected",isNew?"false":"true");
+    $("panel-new").hidden=!isNew; $("panel-list").hidden=isNew; $("bar").hidden=!isNew;
+  }
+  $("tab-new").addEventListener("click",function(){tab("new")});
+  $("tab-list").addEventListener("click",function(){tab("list")});
+
+  function current(){ return db?rows:localRows; }
+
+  var render=function(){
+    var data=current(), ul=$("list"), go=0,stop=0,wait=0;
+    ul.innerHTML="";
+    data.forEach(function(r){
+      if(r.verdict==="續問") go++; else if(r.verdict==="不續問") stop++; else wait++;
+      var li=document.createElement("li");
+      var cls=r.verdict==="續問"?"go":(r.verdict==="不續問"?"stop":"");
+      var iop=(r.iopMax===null||r.iopMax===undefined)?"—":fmt(r.iopMax)+" mmHg";
+      var who=document.createElement("div"); who.className="who"; who.textContent=r.name||"（未填姓名）";
+      var pill=document.createElement("span"); pill.className="pill "+cls; pill.textContent=(r.verdict||"未取得眼壓")+(cloudUrl?(r.synced?" ☁":" ⏳"):"");
+      var meta=document.createElement("div"); meta.className="meta";
+      meta.innerHTML='<span class="mono">'+iop+'</span>'+(r.onMeds?' ｜ 用藥中'+((r.drugs&&r.drugs.length)||r.drugOther?'：'+((r.drugs||[]).concat(r.drugOther?[r.drugOther]:[]).join('、')).replace(/[<>&]/g,''):''):'')+' ｜ '+(r.dx||"疾病別未填")+
+        (r.contact?' ｜ <span class="mono">'+r.contact.replace(/[<>&]/g,"")+'</span>':'');
+      var del=document.createElement("button"); del.className="del"; del.type="button"; del.textContent="刪除";
+      del.addEventListener("click",function(){
+        if(db){ db.doc("records/"+r.id).delete().catch(function(){toast("刪不掉，請再試一次")}); }
+        else { localRows=localRows.filter(function(x){return x.id!==r.id}); render(); }
+      });
+      li.appendChild(who); li.appendChild(pill); li.appendChild(meta); li.appendChild(del);
+      ul.appendChild(li);
+    });
+    $("cGo").textContent=go; $("cStop").textContent=stop; $("cWait").textContent=wait;
+    $("empty").hidden=data.length>0;
+    $("tabcount").textContent=data.length?"("+data.length+")":"";
+  };
+
+  function csv(){
+    var head=["建立時間","姓名或稱呼","聯絡方式","左眼IOP","右眼IOP","較高眼IOP","用降眼壓藥","藥物","判定","適用條件(mmHg)","疾病別","量測日期","備註"];
+    var q=function(v){ v=(v===null||v===undefined)?"":String(v);
+      return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+    var lines=[head.join(",")];
+    current().slice().reverse().forEach(function(r){
+      lines.push([r.createdAt,r.name,r.contact,r.iopL,r.iopR,r.iopMax,(r.onMeds?"是":"否"),((r.drugs||[]).concat(r.drugOther?[r.drugOther]:[]).join("、")),r.verdict,r.threshold,
+                  r.dx,r.measuredOn,r.note].map(q).join(","));
+    });
+    return "﻿"+lines.join("\r\n");
+  }
+  $("export").addEventListener("click",function(){
+    if(!current().length){ toast("還沒有資料"); return; }
+    var name="眼壓初篩_"+new Date().toISOString().slice(0,10).replace(/-/g,"")+".csv";
+    if(downloads){
+      downloads.save({filename:name,data:csv()}).then(function(){toast("已匯出")})
+        .catch(function(e){ toast(e&&e.code==="declined"?"已取消":"匯出失敗"); });
+    } else { toast("這台裝置不能下載檔案"); }
+  });
+
+  paintVerdict(); render();
+
+  // ---- GitHub Pages 版：資料存在這支手機的瀏覽器（localStorage），匯出 CSV 帶走 ----
+  var KEY="iop-screen.records", KEYT="iop-screen.thr";
+  function load(){ try{ localRows=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ localRows=[]; }
+    try{ var t=JSON.parse(localStorage.getItem(KEYT)||"{}");
+      if(typeof t.thrNaive==="number"){thrN=t.thrNaive;$("thrN").value=thrN;}
+      if(typeof t.thrNaiveHigh==="number"){thrH=t.thrNaiveHigh;$("thrH").value=thrH;}
+      if(typeof t.thrTreated==="number"){thrT=t.thrTreated;$("thrT").value=thrT;} }catch(e){}
+    paintThr(); paintVerdict(); render(); }
+  function persist(){ try{ localStorage.setItem(KEY,JSON.stringify(localRows)); }catch(e){ toast("這個瀏覽器不能存資料"); } }
+  saveThr=function(){ try{ localStorage.setItem(KEYT,JSON.stringify({thrNaive:thrN,thrNaiveHigh:thrH,thrTreated:thrT})); }catch(e){} };
+  var _render=render; render=function(){ _render(); persist(); };
+  downloads={ save:function(o){ return new Promise(function(res){
+      var blob=new Blob([o.data],{type:"text/csv;charset=utf-8"});
+      var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=o.filename;
+      document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();},500); res(); }); } };
+  // ---- 雲端試算表（Google Apps Script）----
+  var KEYC="iop-screen.cloud", KEYD="iop-screen.device", cloudUrl="", syncing=false;
+  function deviceId(){ try{ var d=localStorage.getItem(KEYD); if(!d){ d="d"+Math.random().toString(36).slice(2,10); localStorage.setItem(KEYD,d);} return d; }catch(e){ return "d?"; } }
+  function paintCloud(){
+    var pend=localRows.filter(function(r){return r.synced!==true}).length;
+    $("cloudState").textContent=cloudUrl?(pend?"待補送 "+pend+" 筆":"已連線"):"未設定";
+    $("syncBtn").hidden=!(cloudUrl&&pend); $("pendingN").textContent=pend?"("+pend+")":"";
+  }
+  function pushOne(r){
+    return fetch(cloudUrl,{method:"POST",body:JSON.stringify(Object.assign({device:deviceId()},r))})
+      .then(function(res){return res.json()}).then(function(j){ if(!j||!j.ok) throw new Error(j&&j.error||"bad"); });
+  }
+  function syncAll(quiet){
+    if(!cloudUrl||syncing) return Promise.resolve();
+    var todo=localRows.filter(function(r){return r.synced!==true}); if(!todo.length){ paintCloud(); return Promise.resolve(); }
+    syncing=true; var okN=0;
+    return todo.reduce(function(pr,r){ return pr.then(function(){ return pushOne(r).then(function(){ r.synced=true; okN++; },function(){}); }); },Promise.resolve())
+      .then(function(){ syncing=false; render();
+        if(!quiet) toast(okN===todo.length?"雲端已同步":"補送 "+okN+"/"+todo.length+" 筆，其餘下次再試"); });
+  }
+  $("cloudUrl").addEventListener("change",function(){
+    cloudUrl=$("cloudUrl").value.trim(); try{ localStorage.setItem(KEYC,cloudUrl); }catch(e){}
+    paintCloud(); if(cloudUrl) syncAll(false);
+  });
+  $("syncBtn").addEventListener("click",function(){ syncAll(false); });
+  var _render2=render; render=function(){ _render2(); paintCloud(); };
+  // 儲存後立刻送
+  var _save=$("save").onclick; 
+  $("save").addEventListener("click",function(){ setTimeout(function(){ syncAll(true); },50); });
+
+  $("dbwarn").textContent="資料存在這支手機的瀏覽器裡；設定雲端試算表後會同步上傳。請定期「匯出 CSV」或從試算表下載 Excel 備份。";
+  $("dbwarn").hidden=false;
+  try{ cloudUrl=localStorage.getItem(KEYC)||""; $("cloudUrl").value=cloudUrl; }catch(e){}
+  load(); syncAll(true);
+})();
+</script>
+</body>
+</html>
