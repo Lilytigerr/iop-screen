@@ -118,6 +118,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;appearance:none;bo
 
 /* 診斷 */
 .dx{display:flex;flex-direction:column;padding:0 18px 8px}
+.seg.surg{margin:0 18px;padding:12px 0 14px;border-top:1px solid var(--hair)}
 .dx button{position:relative;text-align:left;padding:14px 34px 14px 0;display:flex;align-items:center;gap:12px;font-size:15.5px;font-weight:500;border-bottom:1px solid var(--hair)}
 .dx button:last-child{border-bottom:0}
 .dx button .tag{font-family:var(--num);font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--ink-3);background:var(--surface-2);border-radius:6px;padding:4px 7px;min-width:50px;text-align:center}
@@ -226,7 +227,11 @@ li .del{display:none}
 .kv dd.edit textarea{width:100%;font-size:14.5px;line-height:1.5;padding:8px 10px;border:1.5px solid transparent;border-radius:10px;background:var(--surface-2);color:var(--ink);outline:none;resize:vertical;min-height:44px}
 .kv dd.edit textarea:focus{border-color:var(--teal);background:var(--surface);box-shadow:0 0 0 3px var(--teal-ring)}
 .kv .sep{display:none}
-.sheet .foot{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px;margin-top:18px}
+.sheet .foot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px}
+.sheet .foot #shEdit{grid-column:1/-1}
+.editbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--teal-tint);color:var(--teal-deep);border-radius:14px;padding:12px 16px;margin-bottom:12px;font-size:14px}
+.editbar b{font-weight:700}
+.editbar button{font-size:14px;font-weight:600;color:var(--teal-deep);padding:6px 12px;border-radius:10px;background:var(--surface)}
 .sheet .foot .btn{font-size:14.5px;padding:13px}
 .btn-danger{background:var(--stop-tint);color:var(--stop);font-weight:600}
 
@@ -253,6 +258,7 @@ li .del{display:none}
 
 <div class="wrap">
   <div id="panel-new" role="tabpanel" aria-labelledby="tab-new">
+    <div class="editbar" id="editbar" hidden><span>正在修改<b id="editSeq"></b>，建立時間不會變</span><button type="button" id="editCancel">取消</button></div>
     <div class="verdict" id="verdict">
       <span class="big" id="vbig">先量眼壓</span>
       <span class="why" id="vwhy">眼壓是第一關；沒有數值就先不用往下問。</span>
@@ -275,7 +281,7 @@ li .del{display:none}
       <div class="seg" id="meds">
         <span class="lbl">目前有用降眼壓藥？</span>
         <button type="button" data-meds="no" aria-pressed="true"><span>沒有／已停藥</span><small><span class="thrN">20</span>–<span class="thrH">33</span> 續問</small></button>
-        <button type="button" data-meds="yes" aria-pressed="false"><span>有在用降眼壓藥</span><small>&gt; <span class="thrT">14</span> 續問</small></button>
+        <button type="button" data-meds="yes" aria-pressed="false"><span>有在用降眼壓藥</span><small>&gt; <span class="thrT">14</span> 且 ≤ <span class="thrH">33</span> 續問</small></button>
       </div>
       <div class="drugs" id="drugs" hidden>
         <div class="lbl">用什麼藥？（可複選）</div>
@@ -300,12 +306,17 @@ li .del{display:none}
     </section>
 
     <section class="card">
-      <div class="card-h"><span class="step">02</span><h2>疾病別</h2><span class="hint">單選</span></div>
+      <div class="card-h"><span class="step">02</span><h2>疾病別</h2><span class="hint">其他青光眼 → 不續問</span></div>
       <div class="dx" id="dx">
         <button type="button" data-dx="高眼壓症" aria-pressed="false"><span class="tag">OHT</span>高眼壓症<span class="chk"></span></button>
         <button type="button" data-dx="原發性隅角開放性青光眼" aria-pressed="false"><span class="tag">POAG</span>原發性隅角開放性青光眼<span class="chk"></span></button>
         <button type="button" data-dx="其他青光眼" aria-pressed="false"><span class="tag">OTH</span>其他青光眼<span class="chk"></span></button>
         <button type="button" data-dx="皆無或不確定" aria-pressed="false"><span class="tag">N/A</span>皆無／不確定<span class="chk"></span></button>
+      </div>
+      <div class="seg surg" id="surg">
+        <span class="lbl">曾接受青光眼手術？</span>
+        <button type="button" data-surg="no" aria-pressed="true"><span>沒有</span><small>不曾動過青光眼手術</small></button>
+        <button type="button" data-surg="yes" aria-pressed="false"><span>有</span><small>排除，不續問</small></button>
       </div>
     </section>
 
@@ -337,10 +348,10 @@ li .del{display:none}
       <div class="card-h"><span class="step">—</span><h2>判定門檻</h2><span class="hint">可調</span></div>
       <div class="thr-grid">
         <input id="thrN" inputmode="decimal" value="20"><span>未用藥／停藥後 下限（≥）</span>
-        <input id="thrH" inputmode="decimal" value="33"><span>未用藥／停藥後 上限（≤）</span>
+        <input id="thrH" inputmode="decimal" value="33"><span>上限（≤，用藥／未用藥皆適用）</span>
         <input id="thrT" inputmode="decimal" value="14"><span>用藥中（篩選訪視）下限（&gt;）</span>
       </div>
-      <p class="note">未曾用藥或停藥（washout）後 ≥ 20 且 ≤ 33 mmHg；用藥中 &gt; 14 mmHg。改了會記住。</p>
+      <p class="note">未曾用藥或停藥（washout）後 ≥ 20 且 ≤ 33 mmHg；用藥中 &gt; 14 且 ≤ 33 mmHg。改了會記住。</p>
     </section>
   </div>
 
@@ -383,9 +394,10 @@ li .del{display:none}
   </div>
   <dl class="kv" id="shKv"></dl>
   <div class="foot">
+    <button class="btn btn-primary" id="shEdit" type="button">編輯這一筆</button>
     <button class="btn btn-danger" id="shDel" type="button">刪除</button>
     <button class="btn btn-ghost" id="shCopy" type="button">複製給 LINE</button>
-    <button class="btn btn-primary" id="shClose" type="button">關閉</button>
+    <button class="btn btn-ghost" id="shClose" type="button">關閉</button>
   </div>
 </div>
 
@@ -401,20 +413,22 @@ li .del{display:none}
 (function(){
   var $=function(id){return document.getElementById(id)};
   var KEY="iop-screen.records", KEYT="iop-screen.thr";
-  var thrN=20, thrH=33, thrT=14, onMeds=false, drugPick=[], dxPick="", rows=[], consent=false;
+  var thrN=20, thrH=33, thrT=14, onMeds=false, surg=false, drugPick=[], dxPick="", rows=[], consent=false, editing=null;
   $("consent").addEventListener("click",function(){ consent=!consent; $("consent").setAttribute("aria-pressed",consent?"true":"false"); $("consent").classList.remove("shake"); });
 
   function num(v){ v=(v||"").toString().trim(); if(!v) return null; var n=parseFloat(v); return isFinite(n)?n:null; }
   function fmt(n){ return (Math.round(n*10)/10).toFixed(1); }
   function maxIop(){ var a=num($("iopL").value), b=num($("iopR").value);
     if(a===null&&b===null) return null; return Math.max(a===null?-Infinity:a, b===null?-Infinity:b); }
-  function ruleText(){ return onMeds?("> "+thrT):(thrN+"–"+thrH); }
-  function pass(mx){ return onMeds?(mx>thrT):(mx>=thrN&&mx<=thrH); }
-  function verdictOf(mx){ if(mx===null) return "未取得眼壓"; return pass(mx)?"續問":"不續問"; }
+  function ruleText(){ return onMeds?("> "+thrT+" 且 ≤ "+thrH):(thrN+"–"+thrH); }
+  function pass(mx){ return onMeds?(mx>thrT&&mx<=thrH):(mx>=thrN&&mx<=thrH); }
+  function excluded(){ return dxPick==="其他青光眼"?"疾病別為其他青光眼":(surg?"曾接受青光眼手術":""); }
+  function verdictOf(mx){ if(excluded()) return "不續問"; if(mx===null) return "未取得眼壓"; return pass(mx)?"續問":"不續問"; }
 
   function paintVerdict(){
-    var mx=maxIop(), v=verdictOf(mx), el=$("verdict"); el.classList.remove("go","stop");
-    if(v==="續問"){ el.classList.add("go"); $("vbig").textContent="續問";
+    var mx=maxIop(), v=verdictOf(mx), el=$("verdict"), ex=excluded(); el.classList.remove("go","stop");
+    if(ex){ el.classList.add("stop"); $("vbig").textContent="不續問"; $("vwhy").innerHTML="<b>"+ex+"</b>，屬排除條件。後面免問。"; }
+    else if(v==="續問"){ el.classList.add("go"); $("vbig").textContent="續問";
       $("vwhy").innerHTML="較高眼 <b>"+fmt(mx)+"</b> mmHg，符合"+(onMeds?"用藥中":"未用藥")+"條件 <b>"+ruleText()+"</b>。"; }
     else if(v==="不續問"){ el.classList.add("stop"); $("vbig").textContent="不續問";
       $("vwhy").innerHTML="較高眼 <b>"+fmt(mx)+"</b> mmHg，不在"+(onMeds?"用藥中":"未用藥")+"條件 <b>"+ruleText()+"</b> 內。後面免問。"; }
@@ -446,6 +460,13 @@ li .del{display:none}
     var on=b.getAttribute("aria-pressed")==="true";
     Array.prototype.forEach.call($("dx").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed","false")});
     if(!on){ b.setAttribute("aria-pressed","true"); dxPick=b.dataset.dx; } else dxPick="";
+    paintVerdict();
+  });
+  $("surg").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-surg]"); if(!b) return;
+    surg=b.dataset.surg==="yes";
+    Array.prototype.forEach.call($("surg").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});
+    paintVerdict();
   });
 
   function today(){ var d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
@@ -454,8 +475,10 @@ li .del{display:none}
     $("measured").value=today();
     dxPick=""; Array.prototype.forEach.call($("dx").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed","false")});
     onMeds=false; Array.prototype.forEach.call($("meds").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x.dataset.meds==="no"?"true":"false")});
+    surg=false; Array.prototype.forEach.call($("surg").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x.dataset.surg==="no"?"true":"false")});
     drugPick=[]; Array.prototype.forEach.call($("chips").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed","false")});
     $("drugs").hidden=true; consent=false; $("consent").setAttribute("aria-pressed","false"); $("consent").classList.remove("shake");
+    editing=null; $("editbar").hidden=true; $("save").textContent="儲存這一筆";
     paintVerdict(); window.scrollTo({top:0,behavior:"smooth"}); $("iopL").focus();
   }
   $("clear").addEventListener("click",clearForm);
@@ -464,17 +487,39 @@ li .del{display:none}
     var name=$("name").value.trim(), mx=maxIop();
     if(!name && mx===null){ toast("至少要有姓名或眼壓"); return; }
     if(!consent){ toast("請先勾選「本人已同意提供上述資料」"); $("consent").classList.add("shake"); $("consent").scrollIntoView({block:"center",behavior:"smooth"}); return; }
-    rows.unshift({
+    var rec={
       id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
       name:name, contact:$("contact").value.trim(),
       iopL:num($("iopL").value), iopR:num($("iopR").value), iopMax:mx,
       onMeds:onMeds, drugs:onMeds?drugPick.slice():[], drugOther:onMeds?$("drugOther").value.trim():"",
-      dx:dxPick, verdict:verdictOf(mx), threshold:ruleText(),
+      dx:dxPick, surgery:surg, exclude:excluded(), verdict:verdictOf(mx), threshold:ruleText(),
       measuredOn:$("measured").value||"", note:$("note").value.trim(), consent:true,
       createdAt:new Date().toISOString()
-    });
+    };
+    if(editing){
+      var idx=-1; rows.forEach(function(x,i){ if(x.id===editing) idx=i; });
+      if(idx>=0){ rec.id=rows[idx].id; rec.createdAt=rows[idx].createdAt; rec.updatedAt=new Date().toISOString(); rows[idx]=rec; }
+      else rows.unshift(rec);
+      var seq=rows[idx>=0?idx:0]._seq; render(); toast("已更新"+(seq?"第 "+seq+" 筆":"")); clearForm(); tab("list"); return;
+    }
+    rows.unshift(rec);
     render(); toast("已存"); clearForm();
   });
+  function pressOnly(box,sel,test){ Array.prototype.forEach.call($(box).querySelectorAll(sel),function(x){ x.setAttribute("aria-pressed",test(x)?"true":"false"); }); }
+  function startEdit(r){
+    closeSheet(); clearForm(); editing=r.id;
+    $("iopL").value=(r.iopL===null||r.iopL===undefined)?"":r.iopL; $("iopR").value=(r.iopR===null||r.iopR===undefined)?"":r.iopR;
+    onMeds=!!r.onMeds; pressOnly("meds","button[data-meds]",function(x){return (x.dataset.meds==="yes")===onMeds}); $("drugs").hidden=!onMeds;
+    drugPick=(r.drugs||[]).slice(); pressOnly("chips","button[data-drug]",function(x){return drugPick.indexOf(x.dataset.drug)>=0}); $("drugOther").value=r.drugOther||"";
+    dxPick=r.dx||""; pressOnly("dx","button[data-dx]",function(x){return x.dataset.dx===dxPick});
+    surg=!!r.surgery; pressOnly("surg","button[data-surg]",function(x){return (x.dataset.surg==="yes")===surg});
+    $("name").value=r.name||""; $("contact").value=r.contact||""; $("note").value=r.note||""; $("measured").value=r.measuredOn||today();
+    consent=!!r.consent; $("consent").setAttribute("aria-pressed",consent?"true":"false");
+    $("editSeq").textContent="第 "+r._seq+" 筆"; $("editbar").hidden=false; $("save").textContent="儲存修改";
+    tab("new"); paintVerdict(); window.scrollTo({top:0});
+  }
+  $("editCancel").addEventListener("click",function(){ clearForm(); tab("list"); });
+  $("shEdit").addEventListener("click",function(){ if(current) startEdit(current); });
 
   function tab(which){
     var isNew=which==="new";
@@ -527,13 +572,13 @@ li .del{display:none}
   function openSheet(r){
     current=r; var cls=r.verdict==="續問"?"go":(r.verdict==="不續問"?"stop":"");
     $("shSeq").innerHTML=r._seq+'<small>第'+r._seq+'筆</small>';
-    $("shName").textContent=r.name||"（未填姓名）"; $("shTime").textContent=tstr(r.createdAt,true)+" 建立";
+    $("shName").textContent=r.name||"（未填姓名）"; $("shTime").textContent=tstr(r.createdAt,true)+" 建立"+(r.updatedAt?"　·　"+tstr(r.updatedAt)+" 改":"");
     var pill=$("shPill"); pill.className="pill "+cls; pill.textContent=r.verdict||"未取得眼壓";
     var v=function(x){ return (x===null||x===undefined)?"—":fmt(x); };
     $("shL").querySelector("b").textContent=v(r.iopL); $("shR").querySelector("b").textContent=v(r.iopR); $("shM").querySelector("b").textContent=v(r.iopMax);
     var kv=[["判定條件",(r.onMeds?"用藥中 ":"未用藥 ")+(r.threshold||"")+" mmHg"],
             ["降眼壓藥",r.onMeds?("有在用"+(drugsOf(r)?"：" +drugsOf(r):"")):"沒有／已停藥"],
-            ["疾病別",r.dx||"未填"],["sep"],
+            ["疾病別",r.dx||"未填"],["青光眼手術",r.surgery?"有（排除）":"沒有"],["sep"],
             ["聯絡方式",r.contact||"—","mono"],["量測日期",r.measuredOn||"—","mono"],["同意收集",r.consent?"是":"—"]];
     $("shKv").innerHTML=kv.map(function(k){ return k[0]==="sep"?'<div class="sep"></div>':'<dt>'+esc(k[0])+'</dt><dd class="'+(k[2]||"")+'">'+esc(k[1])+'</dd>'; }).join("")
       +'<dt>備註</dt><dd class="edit"><textarea id="shNote" rows="2" placeholder="點這裡可直接修改備註">'+esc(r.note||"")+'</textarea></dd>';
@@ -547,8 +592,8 @@ li .del{display:none}
   $("shDel").addEventListener("click",function(){ if(!current) return; var r=current; rows=rows.filter(function(x){return x.id!==r.id}); closeSheet(); render(); toast("已刪除第 "+r._seq+" 筆"); });
   $("shCopy").addEventListener("click",function(){ if(!current) return; copyText(lineOne(current),"已複製這一筆，可貼 LINE"); });
 
-  var HEAD=["建立時間","姓名或稱呼","聯絡方式","左眼IOP","右眼IOP","較高眼IOP","用降眼壓藥","藥物","判定","適用條件(mmHg)","疾病別","量測日期","備註","同意收集資料"];
-  function rowVals(r){ return [r.createdAt,r.name,r.contact,r.iopL,r.iopR,r.iopMax,(r.onMeds?"是":"否"),drugsOf(r),r.verdict,r.threshold,r.dx,r.measuredOn,r.note,(r.consent?"是":"")]; }
+  var HEAD=["建立時間","姓名或稱呼","聯絡方式","左眼IOP","右眼IOP","較高眼IOP","用降眼壓藥","藥物","判定","適用條件(mmHg)","疾病別","青光眼手術","量測日期","備註","同意收集資料"];
+  function rowVals(r){ return [r.createdAt,r.name,r.contact,r.iopL,r.iopR,r.iopMax,(r.onMeds?"是":"否"),drugsOf(r),r.verdict,r.threshold,r.dx,(r.surgery?"是":"否"),r.measuredOn,r.note,(r.consent?"是":"")]; }
   function tsv(){ var q=function(v){ return String(v==null?"":v).replace(/[\t\r\n]+/g," "); };
     return [HEAD.join("\t")].concat(rows.slice().reverse().map(function(r){return rowVals(r).map(q).join("\t")})).join("\n"); }
   function csv(){ var q=function(v){ v=String(v==null?"":v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
@@ -562,6 +607,7 @@ li .del{display:none}
     L.push("眼壓 L "+v(r.iopL)+" / R "+v(r.iopR)+" → 較高 "+v(r.iopMax)+"（"+(r.onMeds?"用藥中 ":"未用藥 ")+(r.threshold||"")+"）");
     if(r.onMeds&&drugsOf(r)) L.push("用藥："+drugsOf(r));
     L.push("疾病別："+(r.dx||"未填"));
+    if(r.surgery) L.push("曾接受青光眼手術（排除）");
     if(r.contact) L.push("聯絡："+r.contact);
     if(r.note) L.push("備註："+r.note);
     if(r.consent) L.push("已同意提供資料");
