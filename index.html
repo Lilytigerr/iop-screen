@@ -271,6 +271,8 @@ li .del{grid-column:2/3;justify-self:end;appearance:none;background:transparent;
           <label for="cloudUrl">Apps Script 網頁應用程式網址</label>
           <input id="cloudUrl" inputmode="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec">
         </div>
+        <button class="ghost" id="cloudTest" type="button">儲存並測試連線</button>
+        <div class="banner" id="cloudMsg" hidden></div>
       </div>
       <p class="note" style="margin:8px 0 0">填了之後每存一筆會同時寫進 Google 試算表；沒網路時先留在手機，下次開啟或儲存時自動補送。試算表可隨時「下載為 Excel」。</p>
     </section>
@@ -481,10 +483,25 @@ li .del{grid-column:2/3;justify-self:end;appearance:none;background:transparent;
       .then(function(){ syncing=false; render();
         if(!quiet) toast(okN===todo.length?"雲端已同步":"補送 "+okN+"/"+todo.length+" 筆，其餘下次再試"); });
   }
-  $("cloudUrl").addEventListener("change",function(){
-    cloudUrl=$("cloudUrl").value.trim(); try{ localStorage.setItem(KEYC,cloudUrl); }catch(e){}
-    paintCloud(); if(cloudUrl) syncAll(false);
-  });
+  function cloudMsg(txt,ok){ var m=$("cloudMsg"); m.hidden=false; m.textContent=txt;
+    m.style.background=ok?"var(--go-bg)":"var(--stop-bg)"; m.style.color=ok?"var(--go-ink)":"var(--stop-ink)"; m.style.borderColor=ok?"var(--go-line)":"var(--stop-line)"; }
+  function testCloud(){
+    cloudUrl=$("cloudUrl").value.trim();
+    // 公司 Workspace 帳號會給 /a/macros/網域/s/… 的網址，只有登入該網域的人能用；改成通用形式
+    cloudUrl=cloudUrl.replace(/^https:\/\/script\.google\.com\/a\/macros\/[^\/]+\/s\//,"https://script.google.com/macros/s/");
+    $("cloudUrl").value=cloudUrl; try{ localStorage.setItem(KEYC,cloudUrl); }catch(e){}
+    paintCloud();
+    if(!cloudUrl){ cloudMsg("網址是空的。到 Apps Script「部署」複製結尾 /exec 的網址貼進來。",false); return; }
+    if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(cloudUrl)){
+      cloudMsg("網址格式不對：應該以 https://script.google.com/macros/s/ 開頭、/exec 結尾（不是 /edit）。",false); return; }
+    $("cloudState").textContent="測試中…";
+    fetch(cloudUrl).then(function(r){return r.json()}).then(function(j){
+      if(j&&j.ok){ cloudMsg("連線成功，試算表目前 "+(j.rows||0)+" 筆。之後每存一筆會自動上傳。",true); syncAll(false); }
+      else cloudMsg("連到了但回應不對："+JSON.stringify(j),false);
+    }).catch(function(){ cloudMsg("連不上。最常見原因：部署時「誰可以存取」沒選「所有人」（公司帳號若下拉沒有「所有人」，改用個人 Gmail 重做），或還沒按「部署」。",false); paintCloud(); });
+  }
+  $("cloudTest").addEventListener("click",testCloud);
+  $("cloudUrl").addEventListener("change",testCloud);
   $("syncBtn").addEventListener("click",function(){ syncAll(false); });
   var _render2=render; render=function(){ _render2(); paintCloud(); };
   // 儲存後立刻送
