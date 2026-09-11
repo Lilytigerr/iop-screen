@@ -351,7 +351,7 @@ li .del{display:none}
         <input id="thrH" inputmode="decimal" value="33"><span>上限（≤，用藥／未用藥皆適用）</span>
         <input id="thrT" inputmode="decimal" value="14"><span>用藥中（篩選訪視）下限（&gt;）</span>
       </div>
-      <p class="note">未曾用藥或停藥（washout）後 ≥ 20 且 ≤ 33 mmHg；用藥中 &gt; 14 且 ≤ 33 mmHg。改了會記住。</p>
+      <p class="note">未曾用藥或停藥（washout）後 ≥ 20 且 ≤ 33 mmHg；用藥中 &gt; 14 且 ≤ 33 mmHg。較高眼只要 &gt; 33，不論是否用藥一律不續問。改了會記住。</p>
     </section>
   </div>
 
@@ -431,7 +431,8 @@ li .del{display:none}
     else if(v==="續問"){ el.classList.add("go"); $("vbig").textContent="續問";
       $("vwhy").innerHTML="較高眼 <b>"+fmt(mx)+"</b> mmHg，符合"+(onMeds?"用藥中":"未用藥")+"條件 <b>"+ruleText()+"</b>。"; }
     else if(v==="不續問"){ el.classList.add("stop"); $("vbig").textContent="不續問";
-      $("vwhy").innerHTML="較高眼 <b>"+fmt(mx)+"</b> mmHg，不在"+(onMeds?"用藥中":"未用藥")+"條件 <b>"+ruleText()+"</b> 內。後面免問。"; }
+      $("vwhy").innerHTML=(mx>thrH)?("較高眼 <b>"+fmt(mx)+"</b> mmHg，超過上限 <b>"+thrH+"</b>，不論是否用藥一律不續問。")
+        :("較高眼 <b>"+fmt(mx)+"</b> mmHg，不在"+(onMeds?"用藥中":"未用藥")+"條件 <b>"+ruleText()+"</b> 內。後面免問。"); }
     else { $("vbig").textContent="先量眼壓"; $("vwhy").textContent="眼壓是第一關；沒有數值就先不用往下問。"; }
   }
   function paintThr(){ [["thrN",thrN],["thrH",thrH],["thrT",thrT]].forEach(function(pr){
