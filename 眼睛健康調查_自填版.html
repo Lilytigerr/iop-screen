@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F2F4F6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="眼睛健康調查">
+<title>眼睛健康調查</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&display=swap">
+<style>
+/* ---- 冷調白底：淺灰底、白面、青綠單一重點；8pt 節奏 ---- */
+:root{
+  --ground:#F2F4F6; --surface:#FFFFFF; --surface-2:#F5F7F9; --track:#E6E9ED;
+  --ink:#151A1E; --ink-2:#4A545C; --ink-3:#87919A; --hair:rgba(21,26,30,.08); --hair-2:rgba(21,26,30,.14);
+  --teal:#0F7280; --teal-deep:#0B5560; --teal-tint:#E6F2F4; --teal-ring:rgba(15,114,128,.22);
+  --go:#1F7A4A; --stop:#B4382E; --wait:#5F6B75;
+  --go-tint:#E7F5EC; --stop-tint:#FBE8E5; --wait-tint:#E9EDF1;
+  --shadow:0 1px 2px rgba(21,26,30,.04),0 6px 20px -12px rgba(21,26,30,.14);
+  --sans:"Noto Sans TC","PingFang TC","Hiragino Sans","Microsoft JhengHei",system-ui,sans-serif;
+  --num:-apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,"Noto Sans TC",sans-serif;
+  --r:16px; --r-s:12px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1215; --surface:#181D21; --surface-2:#20262B; --track:#2A3137;
+    --ink:#EDF0F2; --ink-2:#B8C0C7; --ink-3:#7F8991; --hair:rgba(237,240,242,.08); --hair-2:rgba(237,240,242,.16);
+    --teal:#6CC5D2; --teal-deep:#8ED6E0; --teal-tint:#173238; --teal-ring:rgba(108,197,210,.28);
+    --go:#5FCB8E; --stop:#F0877C; --wait:#9AA6B0;
+    --go-tint:#153022; --stop-tint:#3A1D1A; --wait-tint:#232B31;
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1215; --surface:#181D21; --surface-2:#20262B; --track:#2A3137;
+  --ink:#EDF0F2; --ink-2:#B8C0C7; --ink-3:#7F8991; --hair:rgba(237,240,242,.08); --hair-2:rgba(237,240,242,.16);
+  --teal:#6CC5D2; --teal-deep:#8ED6E0; --teal-tint:#173238; --teal-ring:rgba(108,197,210,.28);
+  --go:#5FCB8E; --stop:#F0877C; --wait:#9AA6B0;
+  --go-tint:#153022; --stop-tint:#3A1D1A; --wait-tint:#232B31;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.45;font-size:15px}
+button,input,textarea{font-family:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent;appearance:none;border:0;background:none;padding:0}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}
+[hidden]{display:none!important}
+
+/* 頂部 */
+.masthead{padding:calc(20px + env(safe-area-inset-top)) 0 8px}
+.masthead .inner{max-width:600px;margin:0 auto;padding-inline:20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.brand{flex:1;min-width:0}
+.brand .eyebrow{display:none}
+.brand h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+.brand h1 small{display:block;font-size:12.5px;font-weight:400;color:var(--ink-3);margin-top:4px}
+.tabs{display:flex;background:var(--track);border-radius:10px;padding:3px;flex:none}
+.tabs button{font-size:13.5px;font-weight:500;color:var(--ink-2);padding:7px 14px;border-radius:8px;white-space:nowrap;transition:all .15s}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.10),0 0 0 .5px rgba(0,0,0,.04)}
+.tabs .n{font-family:var(--num);font-size:12px;color:var(--ink-3);margin-left:4px}
+
+.wrap{max-width:600px;margin:0 auto;padding-inline:16px;padding-block:8px 120px}
+
+/* 判定：淺色調卡 */
+.verdict{position:sticky;top:8px;z-index:5;margin:4px 0 12px;padding:14px 18px;border-radius:var(--r);
+  display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:center;
+  background:var(--wait-tint);color:var(--wait);box-shadow:var(--shadow);transition:background .2s,color .2s}
+.verdict::before{content:"";grid-row:1/3;width:10px;height:10px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px color-mix(in srgb,currentColor 18%,transparent)}
+.verdict .big{font-size:20px;font-weight:700;letter-spacing:.02em;line-height:1.15}
+.verdict .why{grid-column:2;font-size:12.5px;color:var(--ink-2);line-height:1.45}
+.verdict:not(.go):not(.stop) .big{color:var(--ink-2)}
+.verdict .why b{font-family:var(--num);font-weight:600;color:var(--ink)}
+.verdict.go{background:var(--go-tint);color:var(--go)} .verdict.stop{background:var(--stop-tint);color:var(--stop)}
+.next{display:flex;align-items:center;gap:12px;margin:-4px 0 12px;padding:12px 12px 12px 16px;border-radius:14px;background:var(--surface);box-shadow:var(--shadow);font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.next .txt{flex:1;min-width:0} .next .qr{flex:none;width:136px;height:136px;image-rendering:pixelated;background:#fff;border-radius:10px;padding:4px;box-sizing:border-box;border:1px solid var(--hair)}
+.next b{color:var(--go)} .next .num{font-family:var(--num);font-weight:600;color:var(--ink)}
+.qrm{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);z-index:32;background:var(--surface);border-radius:22px;padding:22px 22px 18px;width:min(88vw,340px);text-align:center;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+.qrm.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.qrm img{width:100%;max-width:260px;aspect-ratio:1;image-rendering:pixelated;background:#fff;border-radius:12px;padding:8px;box-sizing:border-box}
+.qrm h3{margin:12px 0 4px;font-size:17px;font-weight:700;color:var(--ink)} .qrm p{margin:0 0 14px;font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.qrm .id{font-family:var(--num);font-weight:700;color:var(--teal-deep);font-size:18px;letter-spacing:.02em}
+.qrm .btn{width:100%;padding:13px}
+
+/* 群組卡 */
+.card{background:var(--surface);border-radius:var(--r);padding:6px 0;margin:0 0 12px;box-shadow:var(--shadow)}
+.card-h{display:flex;align-items:baseline;gap:8px;padding:14px 18px 8px}
+.card-h .step{display:none}
+.card-h h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.01em}
+.card-h .hint{margin-left:auto;font-size:12px;color:var(--ink-3)}
+
+/* 眼壓 */
+.eyes{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 18px 14px}
+.eye{position:relative;background:var(--surface-2);border-radius:var(--r-s);padding:12px 12px 10px;border:1.5px solid transparent;transition:border-color .15s,box-shadow .15s}
+.eye:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-ring);background:var(--surface)}
+.eye label{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--ink-3)}
+.eye label b{font-family:var(--num);font-weight:600;font-size:11px;letter-spacing:.08em;color:var(--ink-3)}
+.eye input{width:100%;border:0;background:transparent;font-family:var(--num);font-size:42px;font-weight:600;letter-spacing:-.03em;
+  text-align:left;padding:2px 0 0;outline:none;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.1}
+.eye input::placeholder{color:var(--track)}
+.eye .unit{position:absolute;right:12px;bottom:12px;font-size:11.5px;color:var(--ink-3)}
+
+/* 用藥：iOS 分段 */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 18px 14px;background:transparent}
+.seg .lbl{grid-column:1/-1;font-size:13px;color:var(--ink-2);font-weight:500;padding:4px 0 6px}
+.seg button{position:relative;text-align:left;padding:12px 14px;border-radius:var(--r-s);background:var(--surface-2);font-size:14.5px;font-weight:500;
+  display:flex;flex-direction:column;gap:3px;border:1.5px solid transparent;transition:all .15s}
+.seg button::before{display:none}
+.seg button small{font-family:var(--num);font-size:12px;color:var(--ink-3);font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--teal-tint);border-color:var(--teal);color:var(--teal-deep);font-weight:600}
+.seg button[aria-pressed="true"] small{color:var(--teal)}
+
+/* 藥物 */
+.drugs{margin:0 18px 14px;padding-top:12px;border-top:1px solid var(--hair)}
+.drugs .lbl{font-size:13px;color:var(--ink-2);font-weight:500;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{padding:8px 14px;border-radius:999px;background:var(--surface-2);font-size:13.5px;font-weight:500;color:var(--ink-2);transition:all .15s;border:1.5px solid transparent}
+.chips button::after{display:none}
+.chips button[aria-pressed="true"]{background:var(--teal);color:#fff;font-weight:600}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .chips button[aria-pressed="true"]{color:#0E1215} }
+:root[data-theme="dark"] .chips button[aria-pressed="true"]{color:#0E1215}
+.drugs input{width:100%;margin-top:10px;font-size:15px;padding:11px 12px;border:1.5px solid transparent;border-radius:10px;background:var(--surface-2);color:var(--ink);outline:none}
+.drugs input:focus{border-color:var(--teal);background:var(--surface);box-shadow:0 0 0 3px var(--teal-ring)}
+
+/* 診斷 */
+.dx{display:flex;flex-direction:column;padding:0 18px 8px}
+.seg.surg{margin:0 18px;padding:12px 0 14px;border-top:1px solid var(--hair)}
+.dx button{position:relative;text-align:left;padding:14px 34px 14px 0;display:flex;align-items:center;gap:12px;font-size:15.5px;font-weight:500;border-bottom:1px solid var(--hair)}
+.dx button:last-child{border-bottom:0}
+.dx button .tag{font-family:var(--num);font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--ink-3);background:var(--surface-2);border-radius:6px;padding:4px 7px;min-width:50px;text-align:center}
+.dx button .chk{position:absolute;right:0;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;border:1.5px solid var(--hair-2);transition:all .15s}
+.dx button[aria-pressed="true"]{color:var(--teal-deep);font-weight:600}
+.dx button[aria-pressed="true"] .tag{background:var(--teal-tint);color:var(--teal-deep)}
+.dx button[aria-pressed="true"] .chk{border-color:var(--teal);background:var(--teal)}
+.dx button[aria-pressed="true"] .chk::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+
+/* 一般欄位 */
+.fields{display:grid;padding:0 18px 6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+@media (max-width:430px){.two{grid-template-columns:1fr}}
+.field{padding:10px 0 12px;border-bottom:1px solid var(--hair)}
+.field:last-child{border-bottom:0}
+.field label{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:3px}
+.field input,.field textarea{width:100%;font-size:16.5px;padding:4px 0;border:0;background:transparent;color:var(--ink);outline:none}
+.field textarea{min-height:52px;resize:vertical;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder,.drugs input::placeholder{color:var(--ink-3);opacity:.55}
+
+/* 同意 */
+.consent{display:flex;align-items:center;gap:12px;width:calc(100% - 36px);margin:4px 18px 12px;padding:12px 14px;border-radius:var(--r-s);background:var(--surface-2);text-align:left;border:1.5px solid transparent;transition:all .15s}
+.consent .box{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--hair-2);flex:none;position:relative;background:var(--surface);transition:all .15s}
+.consent .txt b{display:block;font-size:14.5px;font-weight:600}
+.consent .txt small{display:block;font-size:12px;color:var(--ink-3);margin-top:1px}
+.consent[aria-pressed="true"]{background:var(--teal-tint);border-color:var(--teal)}
+.consent[aria-pressed="true"] .box{background:var(--teal);border-color:var(--teal)}
+.consent[aria-pressed="true"] .box::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.consent[aria-pressed="true"] .txt b{color:var(--teal-deep)}
+.consent.shake{border-color:var(--stop);background:var(--stop-tint)}
+/* 門檻 */
+.thr-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;align-items:center;padding:4px 18px 8px}
+.thr-grid input{width:72px;font-family:var(--num);font-size:17px;font-weight:600;text-align:center;padding:8px 6px;border:1.5px solid transparent;border-radius:10px;background:var(--surface-2);color:var(--ink);outline:none}
+.thr-grid input:focus{border-color:var(--teal);background:var(--surface);box-shadow:0 0 0 3px var(--teal-ring)}
+.thr-grid span{font-size:13px;color:var(--ink-2)}
+.note{font-size:12.5px;color:var(--ink-3);line-height:1.6;margin:0;padding:2px 18px 12px}
+
+/* 底部 */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,transparent,var(--ground) 40%)}
+.bar .inner{max-width:600px;margin:0 auto;display:flex;gap:10px}
+.btn{border-radius:14px;font-size:16px;font-weight:600;padding:15px 18px;transition:transform .08s,opacity .15s}
+.btn:active{transform:scale(.985)}
+.btn-primary{flex:1;background:var(--teal);color:#fff;box-shadow:0 10px 24px -12px rgba(15,114,128,.75)}
+.btn-ghost{background:var(--surface);color:var(--ink-2);font-weight:500;padding-inline:18px;box-shadow:var(--shadow)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .btn-primary{color:#0E1215} }
+:root[data-theme="dark"] .btn-primary{color:#0E1215}
+
+/* 名單 */
+.banner{font-size:12.5px;color:var(--ink-3);line-height:1.6;margin:6px 4px 14px}
+.counts{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);border-radius:var(--r);padding:16px 6px 14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.count{text-align:center;position:relative;border:0}
+.count+.count::before{content:"";position:absolute;left:0;top:12%;bottom:12%;width:1px;background:var(--hair)}
+.count b{display:block;font-family:var(--num);font-size:30px;font-weight:700;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.count span{display:block;font-size:11.5px;margin-top:7px;color:var(--ink-3);font-weight:500}
+.count.go b{color:var(--go)} .count.stop b{color:var(--stop)} .count.wait b{color:var(--wait)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.actions.three{grid-template-columns:1fr 1fr 1fr}
+.actions .btn{font-size:13.5px;padding:12px 4px}
+.list-h{display:flex;align-items:center;justify-content:space-between;margin:0 4px 8px}
+.list-h .t{font-size:12.5px;color:var(--ink-3);font-weight:500}
+.list-h>button{font-size:12.5px;color:var(--teal);font-weight:600;padding:6px 8px;border-radius:8px}
+.filt{display:flex;background:var(--track);border-radius:9px;padding:3px;gap:2px}
+.filt button{font-size:12.5px;font-weight:500;color:var(--ink-2);padding:5px 11px;border-radius:7px;transition:all .15s}
+.filt button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+ul.list{list-style:none;margin:0;padding:0 18px;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow)}
+ul.list:empty{display:none}
+ul.list li{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:2px 14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--hair);cursor:pointer}
+ul.list li:last-child{border-bottom:0}
+ul.list li::before{display:none}
+ul.list li:active{opacity:.6}
+.seq{grid-column:1;grid-row:1/3;width:36px;height:36px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);
+  font-family:var(--num);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
+.seq small{display:none}
+.who{grid-column:2;grid-row:1;font-weight:600;font-size:15.5px}
+.meta{grid-column:2;grid-row:2;font-size:12.5px;color:var(--ink-3);line-height:1.5}
+.meta .mono{font-family:var(--num);font-weight:600;color:var(--ink-2)}
+.pill{grid-column:3;grid-row:1/3;font-size:13px;font-weight:700;color:var(--wait);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.pill::after{content:"›";color:var(--ink-3);font-weight:400;font-size:18px;line-height:1}
+.pill.go{color:var(--go)} .pill.stop{color:var(--stop)}
+li .del{display:none}
+.empty{text-align:center;color:var(--ink-3);font-size:13.5px;padding:40px 12px}
+
+/* 詳情 */
+.overlay{position:fixed;inset:0;background:rgba(10,14,16,.42);z-index:30;opacity:0;pointer-events:none;transition:opacity .18s}
+.overlay.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;background:var(--surface);border-radius:22px 22px 0 0;max-height:90vh;overflow:auto;
+  transform:translateY(100%);transition:transform .24s cubic-bezier(.2,.8,.2,1);padding:8px 20px 0}
+.sheet.on{transform:translateY(0)}
+.sheet .grip{width:36px;height:5px;border-radius:3px;background:var(--track);margin:6px auto 16px}
+.kv dd.qrdd{display:flex;align-items:center;gap:10px;justify-content:space-between} .kv dd.qrdd .qr{flex:none;width:96px;height:96px;image-rendering:pixelated;background:#fff;border-radius:8px;padding:3px;box-sizing:border-box;border:1px solid var(--hair)}
+.editlink{display:block;width:100%;text-align:left;margin:-6px 0 14px;padding:10px 14px;border-radius:12px;background:var(--teal-tint);color:var(--teal-deep);font-size:14.5px;font-weight:600}
+.sheet .head{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;margin-bottom:16px}
+.sheet .head .seq{grid-column:1;grid-row:1;width:40px;height:40px;font-size:15px} .sheet .head>div{grid-column:2} .sheet .head .pill{grid-column:3;grid-row:1;font-size:15px}
+.sheet .head .name{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.sheet .head .time{font-family:var(--num);font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.sheet .head .pill::after{display:none}
+.iops{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 16px}
+.iops div{background:var(--surface-2);border-radius:14px;padding:12px 8px 10px;text-align:center;border:0}
+.iops b{display:block;font-family:var(--num);font-size:26px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.iops span{font-size:11.5px;color:var(--ink-3)}
+.iops div.hi{background:var(--teal-tint);color:var(--teal-deep)} .iops div.hi span{color:var(--teal)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:0 18px;font-size:14.5px;margin:0}
+.kv dt{color:var(--ink-3);font-size:13px;padding:10px 0;border-bottom:1px solid var(--hair);white-space:nowrap}
+.kv dd{margin:0;padding:10px 0;border-bottom:1px solid var(--hair);font-weight:500;word-break:break-word}
+.kv dd.mono{font-family:var(--num)}
+.kv dd.edit{padding:6px 0}
+.kv dd.edit textarea{width:100%;font-size:14.5px;line-height:1.5;padding:8px 10px;border:1.5px solid transparent;border-radius:10px;background:var(--surface-2);color:var(--ink);outline:none;resize:vertical;min-height:44px}
+.kv dd.edit textarea:focus{border-color:var(--teal);background:var(--surface);box-shadow:0 0 0 3px var(--teal-ring)}
+.kv .sep{display:none}
+.sheet .foot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px;position:sticky;bottom:0;background:var(--surface);padding:12px 0 calc(16px + env(safe-area-inset-bottom));box-shadow:0 -12px 16px -12px rgba(0,0,0,.18)}
+.sheet .foot #shEdit{grid-column:1/-1}
+.editbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--teal-tint);color:var(--teal-deep);border-radius:14px;padding:12px 16px;margin-bottom:12px;font-size:14px}
+.editbar b{font-weight:700}
+.editbar button{font-size:14px;font-weight:600;color:var(--teal-deep);padding:6px 12px;border-radius:10px;background:var(--surface)}
+.sheet .foot .btn{font-size:14.5px;padding:13px 4px;white-space:nowrap}
+.btn-danger{background:var(--stop-tint);color:var(--stop);font-weight:600}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(6px);bottom:100px;background:var(--ink);color:var(--ground);
+  padding:11px 18px;border-radius:999px;font-size:14px;font-weight:500;z-index:40;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.grp{margin:0 18px 14px;padding-top:12px;border-top:1px solid var(--hair)}
+.grp.first{border-top:0;padding-top:0}
+.grp .lbl{font-size:13px;color:var(--ink-2);font-weight:500;margin-bottom:10px}
+.grp .seg{padding:0} .grp .seg .lbl{padding-top:0}
+.grp input.txt{width:100%;margin-top:10px;font-size:15px;padding:11px 12px;border:1.5px solid transparent;border-radius:10px;background:var(--surface-2);color:var(--ink);outline:none}
+.grp input.txt:focus{border-color:var(--teal);background:var(--surface);box-shadow:0 0 0 3px var(--teal-ring)}
+.pe{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:8px 8px;align-items:center;padding:4px 18px 14px;font-size:13.5px;color:var(--ink-2)}
+.pe .h{font-family:var(--num);font-size:11.5px;font-weight:600;letter-spacing:.06em;color:var(--ink-3);text-align:center}
+.pe span small{display:block;font-family:var(--num);font-size:11px;color:var(--ink-3)}
+.pe input{width:100%;font-family:var(--num);font-size:16px;font-weight:600;text-align:center;padding:9px 6px;border:1.5px solid transparent;border-radius:10px;background:var(--surface-2);color:var(--ink);outline:none}
+.pe input:focus{border-color:var(--teal);background:var(--surface);box-shadow:0 0 0 3px var(--teal-ring)}
+.pe input::placeholder{color:var(--ink-3);opacity:.45}
+
+.intro{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;margin:4px 0 14px;font-size:14px;color:var(--ink-2);line-height:1.65}
+.intro p{margin:0 0 8px} .intro b{color:var(--ink)}
+.addfriend{display:inline-block;margin-top:2px;font-size:14px;font-weight:600;color:var(--teal-deep);background:var(--teal-tint);padding:9px 14px;border-radius:12px;text-decoration:none}
+.done{background:var(--go-tint);color:var(--go);border-radius:var(--r);padding:14px 18px;margin:0 0 16px;font-size:14px;line-height:1.6}
+.done b{font-size:15px}
+.masthead .tabs{display:none}
+.card-h.fold{width:100%;text-align:left;cursor:pointer;padding-bottom:14px}
+.card-h.fold .hint::after{content:" ▾";} .card-h.fold[aria-expanded="true"] .hint::after{content:" ▴";} .card-h.fold[aria-expanded="true"]{padding-bottom:8px}
+
+.chips button small{display:block;font-size:11.5px;font-weight:500;opacity:.8;margin-top:1px}
+.eyes.off{opacity:.35;pointer-events:none}
+.field label em{font-style:normal;color:var(--stop);font-size:12px;margin-left:4px}
+.sheet h3{margin:4px 0 12px;font-size:16px;font-weight:700}
+.pv{white-space:pre-wrap;font-family:var(--num);font-size:13.5px;line-height:1.6;background:var(--surface-2);border-radius:12px;padding:14px;margin:0;max-height:52vh;overflow:auto;color:var(--ink)}
+.sheet .foot.two{grid-template-columns:1fr 1.4fr}
+.done-card{text-align:center;padding:28px 18px 22px}
+.done-big{width:64px;height:64px;border-radius:50%;background:var(--go-tint);color:var(--go);font-size:32px;font-weight:700;line-height:64px;margin:0 auto 12px}
+.done-card h2{margin:0 0 8px;font-size:20px} .done-card p{margin:0 0 18px;font-size:14px;color:var(--ink-2);line-height:1.6}
+.done-btns{display:grid;gap:10px}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="inner">
+    <div class="brand">
+      <span class="eyebrow">Eye health · Survey</span>
+      <h1>眼睛健康調查<small>填完按「送出」，用 LINE 傳送即可</small></h1>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="form">
+    <div class="intro">
+      <p>這份調查想了解您目前的眼壓和眼睛狀況，方便之後跟您聯絡、提供眼睛保健資訊。大約 2 分鐘，不確定的題目可以跳過。</p>
+      <p>填完按最下方「送出」，會先讓您看一遍內容，確認後直接開到 <b>LINE 聊天室</b>、內容已填好，再按一下傳送就完成。第一次會先跳出「加入好友」，加入後再按一次送出即可。</p>
+    </div>
+
+    <section class="card">
+      <div class="card-h"><span class="step">01</span><h2>您的眼壓</h2><span class="hint">最近一次量的，不記得可留空</span></div>
+      <div class="eyes" id="eyes">
+        <div class="eye">
+          <label for="iopL"><span>左眼</span><b>OS</b></label>
+          <input id="iopL" inputmode="decimal" autocomplete="off" placeholder="––">
+          <span class="unit">mmHg</span>
+        </div>
+        <div class="eye">
+          <label for="iopR"><span>右眼</span><b>OD</b></label>
+          <input id="iopR" inputmode="decimal" autocomplete="off" placeholder="––">
+          <span class="unit">mmHg</span>
+        </div>
+      </div>
+      <div class="grp first"><div class="chips" data-group="iopUnknown" data-mode="one"><button type="button" data-v="不知道／沒量過">不知道／沒量過</button></div></div>
+      <div class="grp" id="whenGrp">
+        <div class="lbl">大概什麼時候量的？</div>
+        <div class="chips" data-group="when" data-mode="one">
+          <button type="button" data-v="一個月內">一個月內</button>
+          <button type="button" data-v="半年內">半年內</button>
+          <button type="button" data-v="更久以前">更久以前</button>
+          <button type="button" data-v="不記得">不記得</button>
+        </div>
+      </div>
+      <div class="seg" data-group="meds" data-mode="one" data-default="no">
+        <span class="lbl">目前有在點降眼壓的眼藥水嗎？</span>
+        <button type="button" data-v="no"><span>沒有／已停藥</span></button>
+        <button type="button" data-v="yes"><span>有在用</span></button>
+      </div>
+      <div class="drugs" id="drugs" hidden>
+        <div class="lbl">用哪些藥？（可複選，看藥瓶或藥盒上的名字）</div>
+        <div class="chips" data-group="drugs" data-mode="multi">
+          <button type="button" data-v="Latanoprost">Latanoprost<small>舒而坦</small></button>
+          <button type="button" data-v="Timolol">Timolol</button>
+          <button type="button" data-v="Cosopt">Cosopt<small>康舒目</small></button>
+          <button type="button" data-v="Azarga">Azarga</button>
+          <button type="button" data-v="Simbrinza">Simbrinza</button>
+          <button type="button" data-v="Lumigan">Lumigan<small>露明</small></button>
+          <button type="button" data-v="Travatan">Travatan<small>舒壓坦</small></button>
+          <button type="button" data-v="不知道藥名">不知道藥名</button>
+        </div>
+        <input id="drugOther" autocomplete="off" placeholder="其他藥名">
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-h"><span class="step">02</span><h2>眼科醫師怎麼說</h2><span class="hint">單選</span></div>
+      <div class="dx" data-group="dx" data-mode="one">
+        <button type="button" data-v="高眼壓症"><span class="tag">OHT</span>高眼壓症<span class="chk"></span></button>
+        <button type="button" data-v="原發性隅角開放性青光眼"><span class="tag">POAG</span>原發性隅角開放性青光眼<span class="chk"></span></button>
+        <button type="button" data-v="其他青光眼"><span class="tag">OTH</span>其他青光眼<span class="chk"></span></button>
+        <button type="button" data-v="以上皆無"><span class="tag">NONE</span>以上皆無<span class="chk"></span></button>
+        <button type="button" data-v="不確定"><span class="tag">N/A</span>不確定<span class="chk"></span></button>
+      </div>
+      <div class="grp">
+        <div class="lbl">主要是哪一眼？</div>
+        <div class="chips" data-group="eye" data-mode="one">
+          <button type="button" data-v="左眼">左眼</button>
+          <button type="button" data-v="右眼">右眼</button>
+          <button type="button" data-v="雙眼">雙眼</button>
+          <button type="button" data-v="不確定">不確定</button>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="lbl">做過哪些眼科雷射或手術？（可複選）</div>
+        <div class="chips" data-group="ops" data-mode="multi">
+          <button type="button" data-v="沒有雷射／手術" data-excl="1">沒有</button>
+          <button type="button" data-v="青光眼雷射">青光眼雷射</button>
+          <button type="button" data-v="青光眼手術">青光眼手術</button>
+          <button type="button" data-v="白內障手術">白內障手術</button>
+        </div>
+        <input class="txt" id="opsOther" autocomplete="off" placeholder="其他雷射／手術">
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-h"><span class="step">03</span><h2>檢查與就診</h2><span class="hint">最近一年</span></div>
+      <div class="grp first">
+        <div class="lbl">最近一年做過哪些眼睛檢查？（可複選）</div>
+        <div class="chips" data-group="exams" data-mode="multi">
+          <button type="button" data-v="眼壓（IOP）">眼壓</button>
+          <button type="button" data-v="視野">視野</button>
+          <button type="button" data-v="OCT">OCT</button>
+          <button type="button" data-v="眼底攝影">眼底攝影</button>
+          <button type="button" data-v="中央角膜厚度（CCT）">中央角膜厚度</button>
+          <button type="button" data-v="不確定" data-excl="1">不確定</button>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="seg" data-group="examData" data-mode="one">
+          <span class="lbl">方便提供檢查資料嗎？</span>
+          <button type="button" data-v="有"><span>可以</span><small>有影本或可調閱</small></button>
+          <button type="button" data-v="無"><span>不方便</span><small>沒有或不方便</small></button>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="hospital">主要在哪家醫院或診所看眼科？</label>
+          <input id="hospital" autocomplete="off" placeholder="例：三總、台大、○○眼科診所">
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <button type="button" class="card-h fold" id="foldBtn" aria-expanded="false"><span class="step">04</span><h2>病歷上的數值</h2><span class="hint">有的話再填 · 點開填寫</span></button>
+      <div id="foldBody" hidden>
+      <div class="pe">
+        <span class="h"></span><span class="h">左眼 OS</span><span class="h">右眼 OD</span>
+        <span>矯正視力</span><input id="vaL" inputmode="decimal" placeholder="0.8"><input id="vaR" inputmode="decimal" placeholder="1.0">
+        <span>角膜厚度 CCT<small>µm</small></span><input id="cctL" inputmode="numeric" placeholder="540"><input id="cctR" inputmode="numeric" placeholder="540">
+        <span>杯盤比 C/D</span><input id="cdL" inputmode="decimal" placeholder="0.5"><input id="cdR" inputmode="decimal" placeholder="0.5">
+        <span>視野 MD<small>dB</small></span><input id="mdL" inputmode="decimal" placeholder="-2.5"><input id="mdR" inputmode="decimal" placeholder="-2.5">
+        <span>OCT RNFL<small>µm</small></span><input id="rnflL" inputmode="numeric" placeholder="90"><input id="rnflR" inputmode="numeric" placeholder="90">
+      </div>
+      <div class="grp">
+        <div class="lbl">隅角（醫師有提過的話）</div>
+        <div class="chips" data-group="angle" data-mode="one">
+          <button type="button" data-v="開放">開放</button>
+          <button type="button" data-v="狹窄或閉鎖">狹窄或閉鎖</button>
+          <button type="button" data-v="不確定">不確定</button>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="lbl">全身疾病（可複選）</div>
+        <div class="chips" data-group="sys" data-mode="multi">
+          <button type="button" data-v="無" data-excl="1">無</button>
+          <button type="button" data-v="糖尿病">糖尿病</button>
+          <button type="button" data-v="高血壓">高血壓</button>
+        </div>
+        <input class="txt" id="sysOther" autocomplete="off" placeholder="其他（文字）">
+      </div>
+      <div class="fields">
+        <div class="two">
+          <div class="field">
+            <label for="dxYear">大約哪一年確診</label>
+            <input id="dxYear" inputmode="numeric" autocomplete="off" placeholder="2021">
+          </div>
+          <div class="field">
+            <label for="otherEye">其他眼睛疾病</label>
+            <input id="otherEye" autocomplete="off" placeholder="例：白內障、黃斑部病變">
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-h"><span class="step">05</span><h2>怎麼聯絡您</h2><span class="hint">姓名可用稱呼</span></div>
+      <div class="fields">
+        <div class="two">
+          <div class="field">
+            <label for="name">姓名或稱呼 <em>必填</em></label>
+            <input id="name" autocomplete="name" placeholder="王先生">
+          </div>
+          <div class="field">
+            <label for="contact">聯絡電話 <em>必填</em></label>
+            <input id="contact" autocomplete="tel" inputmode="tel" placeholder="0912-345-678">
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Email（選填）</label>
+          <input id="email" autocomplete="email" inputmode="email" placeholder="abc@mail.com">
+        </div>
+      </div>
+      <div class="grp">
+        <div class="seg" data-group="willHealth" data-mode="one">
+          <span class="lbl">願意收到眼睛保健資訊嗎？</span>
+          <button type="button" data-v="願意"><span>願意</span></button>
+          <button type="button" data-v="不願意"><span>不願意</span></button>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="note">想補充的話（選填）</label>
+          <textarea id="note" placeholder="例：下午才方便接電話"></textarea>
+        </div>
+      </div>
+      <button type="button" class="consent" id="consent" aria-pressed="false">
+        <span class="box"></span>
+        <span class="txt"><b>我同意提供以上資料</b><small>作為聯絡與眼睛保健資訊使用；未勾選無法送出</small></span>
+      </button>
+    </section>
+  </div>
+
+  <section class="card done-card" id="doneCard" hidden>
+    <div class="done-big">✓</div>
+    <h2>已送出，謝謝您！</h2>
+    <p>LINE 應該已經打開、內容也填好了，按傳送即可。<br>若跳出「加入好友」，加入後回來按「再送一次」。</p>
+    <div class="done-btns">
+      <button class="btn btn-primary" id="resend" type="button">再送一次</button>
+      <button class="btn btn-ghost" id="copy2" type="button">複製內容</button>
+      <button class="btn btn-ghost" id="restart" type="button">重新填一份</button>
+    </div>
+  </section>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="pvTitle">
+  <div class="grip"></div>
+  <h3 id="pvTitle">要送出的內容</h3>
+  <pre class="pv" id="pv"></pre>
+  <div class="foot two">
+    <button class="btn btn-ghost" id="pvBack" type="button">回去修改</button>
+    <button class="btn btn-primary" id="pvSend" type="button">確認送出</button>
+  </div>
+</div>
+
+<div class="bar" id="bar">
+  <div class="inner">
+    <button class="btn btn-ghost" id="copy" type="button">複製內容</button>
+    <button class="btn btn-primary" id="send" type="button">送出</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  // ===== 收件的 LINE 官方帳號 ID（含 @，例如 "@abc1234"）。留空 = 退回一般分享畫面（要自己選收件人）=====
+  var OA_ID="";
+  try{ var m=location.search.match(/[?&]oa=(@?[A-Za-z0-9_.-]+)/); if(m) OA_ID=(m[1][0]==="@"?"":"@")+m[1]; }catch(e){}
+  var KEYD="eye-q.draft3", consent=false, sent=false;
+
+  // ---- 群組（單選／複選）通用 ----
+  var GROUPS={};
+  Array.prototype.forEach.call(document.querySelectorAll("[data-group]"),function(el){
+    var k=el.dataset.group, mode=el.dataset.mode, def=el.dataset.default||"";
+    GROUPS[k]={el:el,mode:mode,def:def,val:mode==="multi"?[]:def,auto:el.dataset.auto||""};
+    el.addEventListener("click",function(e){
+      var b=e.target.closest("button[data-v]"); if(!b) return;
+      var g=GROUPS[k], v=b.dataset.v;
+      if(g.mode==="one"){ g.val=(g.val===v&&!g.def)?"":v; }
+      else{
+        var i=g.val.indexOf(v);
+        if(i>=0) g.val.splice(i,1);
+        else{
+          if(b.dataset.excl) g.val=[v];
+          else{ g.val=g.val.filter(function(x){ var bb=el.querySelector('button[data-v="'+x+'"]'); return !(bb&&bb.dataset.excl); }); g.val.push(v); }
+        }
+      }
+      paintGroup(k); afterChange(k); saveDraft();
+    });
+  });
+  function paintGroup(k){ var g=GROUPS[k];
+    Array.prototype.forEach.call(g.el.querySelectorAll("button[data-v]"),function(b){
+      var on=g.mode==="multi"?g.val.indexOf(b.dataset.v)>=0:g.val===b.dataset.v; b.setAttribute("aria-pressed",on?"true":"false"); }); }
+  function setGroup(k,v){ var g=GROUPS[k]; g.val=g.mode==="multi"?(v||[]).slice():(v||g.def); paintGroup(k); }
+  var G=function(k){ return GROUPS[k].val; };
+  function onMeds(){ return G("meds")==="yes"; }
+  function iopUnknown(){ return !!G("iopUnknown"); }
+  function afterChange(k){
+    if(k==="meds"){ $("drugs").hidden=!onMeds(); }
+    if(k==="iopUnknown"){ var u=iopUnknown(); if(u){ $("iopL").value=""; $("iopR").value=""; } $("eyes").classList.toggle("off",u); $("whenGrp").hidden=u; }
+  }
+  ["iopL","iopR"].forEach(function(id){ $(id).addEventListener("input",function(){ if($(id).value.trim()){ setGroup("iopUnknown",""); $("eyes").classList.remove("off"); $("whenGrp").hidden=false; } }); });
+
+  $("consent").addEventListener("click",function(){ consent=!consent; $("consent").setAttribute("aria-pressed",consent?"true":"false"); $("consent").classList.remove("shake"); saveDraft(); });
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove("on")},2200); }
+
+  var TEXT=["iopL","iopR","drugOther","opsOther","hospital","vaL","vaR","cctL","cctR","cdL","cdR","mdL","mdR","rnflL","rnflR","sysOther","dxYear","otherEye","name","contact","email","note"];
+  var T=function(id){ return $(id).value.trim(); };
+
+  function check(){
+    if(!T("name")&&!T("contact")){ toast("請至少填姓名或電話"); $("name").scrollIntoView({block:"center",behavior:"smooth"}); $("name").focus(); return false; }
+    if(!consent){ toast("請先勾選「我同意提供以上資料」"); $("consent").classList.add("shake"); $("consent").scrollIntoView({block:"center",behavior:"smooth"}); return false; }
+    return true;
+  }
+  $("send").addEventListener("click",function(){ if(!check()) return; openPreview(); });
+  $("copy").addEventListener("click",function(){ if(!check()) return; copyText(message(),"已複製，到 LINE 貼上即可"); });
+  $("foldBtn").addEventListener("click",function(){ var open=$("foldBody").hidden; $("foldBody").hidden=!open; $("foldBtn").setAttribute("aria-expanded",open?"true":"false"); });
+  function showDone(on){ sent=on; $("form").hidden=on; $("doneCard").hidden=!on; $("bar").hidden=on; window.scrollTo({top:0}); saveDraft(); }
+
+  // ---- 草稿 ----
+  function saveDraft(){ try{ var d={g:{},consent:consent,sent:sent}; TEXT.forEach(function(id){ d[id]=$(id).value; }); Object.keys(GROUPS).forEach(function(k){ d.g[k]=G(k); }); localStorage.setItem(KEYD,JSON.stringify(d)); }catch(e){} }
+  function loadDraft(){ try{ var d=JSON.parse(localStorage.getItem(KEYD)||"null"); if(!d) return;
+    TEXT.forEach(function(id){ if(typeof d[id]==="string") $(id).value=d[id]; });
+    Object.keys(GROUPS).forEach(function(k){ if(d.g&&d.g[k]!==undefined) setGroup(k,d.g[k]); });
+    consent=!!d.consent; $("consent").setAttribute("aria-pressed",consent?"true":"false"); sent=!!d.sent; }catch(e){} }
+  TEXT.forEach(function(id){ $(id).addEventListener("input",saveDraft); });
+
+  // ---- 訊息 ----
+  function dash(x){ return x?x:"—"; }
+  function pad(n){ return (n<10?"0":"")+n; }
+  function now(){ var d=new Date(); return d.getFullYear()+"/"+pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "+pad(d.getHours())+":"+pad(d.getMinutes()); }
+  function join(a,other){ return (a||[]).concat(other?[other]:[]).join("、"); }
+  function pe(lab,a,b){ return (a||b)?(lab+" "+dash(a)+"/"+dash(b)):""; }
+  function message(){
+    var L=[];
+    L.push("【眼睛健康調查】"+now());
+    L.push("姓名："+dash(T("name")));
+    L.push("電話："+dash(T("contact")));
+    L.push("Email："+dash(T("email")));
+    L.push("眼壓："+(iopUnknown()?"不知道／沒量過":("左 "+dash(T("iopL"))+" / 右 "+dash(T("iopR"))+" mmHg"+(G("when")?"（"+G("when")+"）":""))));
+    L.push("降眼壓藥："+(onMeds()?("有在用："+dash(join(G("drugs"),T("drugOther")))):"沒有／已停藥"));
+    L.push("醫師診斷："+dash(G("dx"))+(G("eye")?"（"+G("eye")+"）":""));
+    L.push("雷射／手術："+dash(join(G("ops"),T("opsOther"))));
+    L.push("檢查（近一年）："+dash(G("exams").join("、"))+"；資料："+dash(G("examData"))+"；就診："+dash(T("hospital")));
+    var p=[pe("視力",T("vaL"),T("vaR")),pe("CCT",T("cctL"),T("cctR")),pe("C/D",T("cdL"),T("cdR")),pe("MD",T("mdL"),T("mdR")),pe("RNFL",T("rnflL"),T("rnflR"))].filter(Boolean).join("；");
+    L.push("病歷數值："+dash(p));
+    L.push("隅角："+dash(G("angle"))+"；確診："+dash(T("dxYear"))+"；其他眼疾："+dash(T("otherEye"))+"；全身："+dash(join(G("sys"),T("sysOther"))));
+    L.push("保健資訊："+dash(G("willHealth")));
+    L.push("備註："+dash(T("note")));
+    L.push("✓ 同意提供以上資料");
+    return L.join("\n");
+  }
+  function copyText(text,msg){
+    var done=function(){ toast(msg); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done,function(){ fallbackCopy(text,done); }); }
+    else fallbackCopy(text,done);
+  }
+  function fallbackCopy(text,done){
+    var ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){ toast("複製失敗，請截圖傳送"); } ta.remove();
+  }
+
+  // ---- 預覽與送出 ----
+  function openPreview(){ $("pv").textContent=message(); $("overlay").classList.add("on"); $("sheet").classList.add("on"); document.body.style.overflow="hidden"; }
+  function closePreview(){ $("overlay").classList.remove("on"); $("sheet").classList.remove("on"); document.body.style.overflow=""; }
+  $("pvBack").addEventListener("click",closePreview); $("overlay").addEventListener("click",closePreview);
+  function sendLine(){
+    var text=message();
+    try{ if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text); }catch(e){}
+    if(OA_ID) window.location.href="https://line.me/R/oaMessage/"+encodeURIComponent(OA_ID)+"/?"+encodeURIComponent(text);
+    else window.location.href="https://line.me/R/share?text="+encodeURIComponent(text);
+  }
+  $("pvSend").addEventListener("click",function(){ closePreview(); showDone(true); setTimeout(sendLine,150); });
+  $("resend").addEventListener("click",sendLine);
+  $("copy2").addEventListener("click",function(){ copyText(message(),"已複製，到 LINE 貼上即可"); });
+  $("restart").addEventListener("click",function(){
+    TEXT.forEach(function(id){ $(id).value=""; }); Object.keys(GROUPS).forEach(function(k){ setGroup(k,GROUPS[k].mode==="multi"?[]:GROUPS[k].def); });
+    consent=false; $("consent").setAttribute("aria-pressed","false"); sent=false; $("drugs").hidden=true; $("eyes").classList.remove("off"); $("whenGrp").hidden=false;
+    $("foldBody").hidden=true; $("foldBtn").setAttribute("aria-expanded","false"); try{ localStorage.removeItem(KEYD); }catch(e){} showDone(false);
+  });
+
+  // ---- 載入 ----
+  loadDraft();
+  Object.keys(GROUPS).forEach(paintGroup);
+  $("drugs").hidden=!onMeds(); $("eyes").classList.toggle("off",iopUnknown()); $("whenGrp").hidden=iopUnknown();
+  if(["vaL","vaR","cctL","cctR","cdL","cdR","mdL","mdR","rnflL","rnflR","sysOther","dxYear","otherEye"].some(function(id){return $(id).value})||G("angle")||G("sys").length){ $("foldBody").hidden=false; $("foldBtn").setAttribute("aria-expanded","true"); }
+  if(sent) showDone(true);
+})();
+</script>
+</body>
+</html>
