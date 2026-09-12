@@ -283,6 +283,13 @@ li .del{display:none}
 .done-big{width:64px;height:64px;border-radius:50%;background:var(--go-tint);color:var(--go);font-size:32px;font-weight:700;line-height:64px;margin:0 auto 12px}
 .done-card h2{margin:0 0 8px;font-size:20px} .done-card p{margin:0 0 18px;font-size:14px;color:var(--ink-2);line-height:1.6}
 .done-btns{display:grid;gap:10px}
+.lineinfo{margin-top:12px;padding-top:12px;border-top:1px solid var(--hair)}
+.lineinfo .t{font-size:13px;color:var(--ink-3);margin-bottom:10px}
+.lineinfo .row{display:flex;align-items:center;gap:12px}
+.lineinfo .id{flex:1;display:block;text-decoration:none;background:var(--teal-tint);color:var(--teal-deep);border-radius:12px;padding:12px 14px;font-size:12.5px;line-height:1.3}
+.lineinfo .id b{display:block;font-family:var(--num);font-size:19px;font-weight:700;letter-spacing:.02em;margin:2px 0} .lineinfo .id small{font-size:12px;opacity:.85}
+.lineinfo .qr{flex:none;width:112px;height:112px;image-rendering:pixelated;background:#fff;border-radius:10px;padding:4px;box-sizing:border-box;border:1px solid var(--hair)}
+.lineinfo.done{text-align:left;margin:0 0 18px}
 </style>
 </head>
 <body>
@@ -301,6 +308,10 @@ li .del{display:none}
     <div class="intro">
       <p>這份調查想了解您目前的眼壓和眼睛狀況，方便之後跟您聯絡、提供眼睛保健資訊。大約 2 分鐘，不確定的題目可以跳過。</p>
       <p>填完按最下方「送出」，會先讓您看一遍內容，確認後直接開到 <b>LINE 聊天室</b>、內容已填好，再按一下傳送就完成。第一次會先跳出「加入好友」，加入後再按一次送出即可。</p>
+      <div class="lineinfo">
+        <div class="t">也可以先加 LINE 好友，再把內容貼過去</div>
+        <div class="row"><a class="id" href="https://line.me/R/ti/p/_L_LeDskNy" target="_blank" rel="noopener">LINE ID<b>jane766032</b><small>點一下開 LINE 加好友 ›</small></a><img class="qr" alt="LINE QR code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAADOAQAAAABeZABpAAABSWlDQ1BJQ0MgUHJvZmlsZQAAeJx9kMFKQlEQhj/LkFLIRUGLFkKLCCwkxUU70xDBhZhitbteTQu1w/VKtOshojcoegMhgqInCIKCVkG7toGbktscrbSiBob/4z8zc4aBEZ+hVM0N1Bu2lU2uBjY2twKeZ8bxMo2fkGE2VSyTSUsJn/o9One4tN4u6lm/3/+NiVK5aYq+SUZMZdngCgln9m2l+VB4ypKlhI80V/p8prnY54teTS4bF74R9ptVoyT8KBwsDvmVIa7XWubHDnp7X7mRXxedkZwlTZIAedEcWWIUSJFg7Y+eSK8nzh6KAyx2qFDFlgkxcRQ1ysIpGpgsERReJiQZ1bf+ecOBVz2H6Il81Rp4uytwOQ+TiYE39yRnDMO1rQzL+Lqsq+NuboeX++xtw9ix47wUwLMA3XvHeW07TvcURh/gqvMOK2FcDH1gzpAAAAHiSURBVHjazZhNaiQxDIU/twy1dN8gFxlQ3SzkZu6j5AaqZYOKNwtXMqswEIaMvHGBF/WQpffjJr5Y540v1/eOCAALzzFzSAE4AL/++b++i9AlWTigcHCTTFJUQXiD1nZAQeeh4HmHo/Ufh/HV6msbk6F2Bx5b/p9C/e3owdEUfr7Ms+2lEHYQ9OP1AcCWZIchjjo1fLTW1jh34Ni34Gyt3asgRJKkuPYcynF91kEIbkFyEY4FDBXiQ8kChUvTJNO0cGlWQjhN04JcnAOmqSikKTf8vPN8mRauwKTn3fuQRaFJYcjCLRw8cQus1qRMhef40405ZJpWB2GQQwzl1YRKVk9mHdXrPPS+b4GFn23v+Kap971ODSUBia9iKpwx67gvNBkzlzkcWlQjySppioLlYBdOW7NTibFzzASGtMZkqFYNw5eUXClgTNOUZp1ZXmyTuCSFrySVxZLUYkLGEhdMMynUhzfYVhSFPPYcOu9seiuky1cN1whjkgXgtdhG+jSuC63CC7mvo7XW+piJ59EWMXbIQmnUl+r18daHVrpPHqX6ENxiMQyX2YY6/vAz0fch08wxN80cs04a/ThyBXnsAMcrx2upW5a0SGYZsOVgCzmH9X54keH8IEPV0eX2g6+pvwGKMXWfdFZ/EAAAAABJRU5ErkJggg=="></div>
+      </div>
     </div>
 
     <section class="card">
@@ -491,6 +502,10 @@ li .del{display:none}
     <div class="done-big">✓</div>
     <h2>已送出，謝謝您！</h2>
     <p>LINE 應該已經打開、內容也填好了，按傳送即可。<br>若跳出「加入好友」，加入後回來按「再送一次」。</p>
+    <div class="lineinfo done">
+      <div class="t">沒開成 LINE？掃 QR 或搜尋 ID 加好友，再按「複製內容」貼上</div>
+      <div class="row"><a class="id" href="https://line.me/R/ti/p/_L_LeDskNy" target="_blank" rel="noopener">LINE ID<b>jane766032</b><small>點一下開 LINE 加好友 ›</small></a><img class="qr" alt="LINE QR code" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAADOAQAAAABeZABpAAABSWlDQ1BJQ0MgUHJvZmlsZQAAeJx9kMFKQlEQhj/LkFLIRUGLFkKLCCwkxUU70xDBhZhitbteTQu1w/VKtOshojcoegMhgqInCIKCVkG7toGbktscrbSiBob/4z8zc4aBEZ+hVM0N1Bu2lU2uBjY2twKeZ8bxMo2fkGE2VSyTSUsJn/o9One4tN4u6lm/3/+NiVK5aYq+SUZMZdngCgln9m2l+VB4ypKlhI80V/p8prnY54teTS4bF74R9ptVoyT8KBwsDvmVIa7XWubHDnp7X7mRXxedkZwlTZIAedEcWWIUSJFg7Y+eSK8nzh6KAyx2qFDFlgkxcRQ1ysIpGpgsERReJiQZ1bf+ecOBVz2H6Il81Rp4uytwOQ+TiYE39yRnDMO1rQzL+Lqsq+NuboeX++xtw9ix47wUwLMA3XvHeW07TvcURh/gqvMOK2FcDH1gzpAAAAHiSURBVHjazZhNaiQxDIU/twy1dN8gFxlQ3SzkZu6j5AaqZYOKNwtXMqswEIaMvHGBF/WQpffjJr5Y540v1/eOCAALzzFzSAE4AL/++b++i9AlWTigcHCTTFJUQXiD1nZAQeeh4HmHo/Ufh/HV6msbk6F2Bx5b/p9C/e3owdEUfr7Ms+2lEHYQ9OP1AcCWZIchjjo1fLTW1jh34Ni34Gyt3asgRJKkuPYcynF91kEIbkFyEY4FDBXiQ8kChUvTJNO0cGlWQjhN04JcnAOmqSikKTf8vPN8mRauwKTn3fuQRaFJYcjCLRw8cQus1qRMhef40405ZJpWB2GQQwzl1YRKVk9mHdXrPPS+b4GFn23v+Kap971ODSUBia9iKpwx67gvNBkzlzkcWlQjySppioLlYBdOW7NTibFzzASGtMZkqFYNw5eUXClgTNOUZp1ZXmyTuCSFrySVxZLUYkLGEhdMMynUhzfYVhSFPPYcOu9seiuky1cN1whjkgXgtdhG+jSuC63CC7mvo7XW+piJ59EWMXbIQmnUl+r18daHVrpPHqX6ENxiMQyX2YY6/vAz0fch08wxN80cs04a/ThyBXnsAMcrx2upW5a0SGYZsOVgCzmH9X54keH8IEPV0eX2g6+pvwGKMXWfdFZ/EAAAAABJRU5ErkJggg=="></div>
+    </div>
     <div class="done-btns">
       <button class="btn btn-primary" id="resend" type="button">再送一次</button>
       <button class="btn btn-ghost" id="copy2" type="button">複製內容</button>
